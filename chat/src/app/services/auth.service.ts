@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
-  user: any;
 
   constructor(private router: Router) { }
 
@@ -16,14 +15,15 @@ export class AuthService {
       // no valid session relocate to login page
       alert("Not logged in!");
       this.router.navigate(['/login']);
+      return null;
     } else {
-      this.user = JSON.parse(sessionStorage.getItem("user") || "");
+      let data = JSON.parse(sessionStorage.getItem("user") || "");
+      return new User(data.username, data.email, data.role, data.valid);
     }
-    return this.user;
   }
   // Save to session storage
-  saveSession(data: any) {
-    sessionStorage.setItem("user", JSON.stringify(data));
+  saveSession(user: User) {
+    sessionStorage.setItem("user", JSON.stringify(user));
   }
 
   // Clear session to Logout
