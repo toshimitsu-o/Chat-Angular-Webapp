@@ -1,0 +1,31 @@
+<h1>Profile</h1>
+<form>
+    <!-- Username input -->
+    <div class="form-outline mb-4">
+      <label class="form-label">Username</label>
+      <input type="username" class="form-control" [(ngModel)]="user.username" name="username" />
+    </div>
+
+    <!-- Email input -->
+    <div class="form-outline mb-4">
+      <label class="form-label">Email address</label>
+      <input type="email" class="form-control" [(ngModel)]="user.email" name="email" />
+    </div>
+
+    <!-- birthdate input -->
+    <div class="form-outline mb-4">
+      <label class="form-label">Birthdate</label>
+      <input type="birthdate" class="form-control" [(ngModel)]="user.birthdate" name="birthdate" />
+    </div>
+
+    <!-- age input -->
+    <div class="form-outline mb-4">
+      <label class="form-label">Age</label>
+      <input type="age" class="form-control" [(ngModel)]="user.age" name="age" />
+    </div>
+  
+  
+    <!-- Submit button -->
+    <button type="button" class="btn btn-primary btn-block mb-4" (click)="save()">Save</button>
+  
+  </form>
