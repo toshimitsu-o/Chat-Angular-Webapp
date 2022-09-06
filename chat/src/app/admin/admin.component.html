@@ -1,0 +1,117 @@
+<h1>Admin</h1>
+<h2>Groups</h2>
+<button *ngIf="user.role == 'superAdmin' || user.role == 'groupAdmin'" class="btn btn-outline-primary"
+    (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseGroup">Create</button>
+<div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+    <div class="card">
+        <div class="card-body row row-cols-lg-auto g-3 align-items-center">
+            <div class="col">
+                <input class="form-control" placeholder="Group ID" name="id" #groupid>
+            </div>
+            <div class="col">
+                <input class="form-control" placeholder="Group Name" name="name" #groupname>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-outline-primary"
+                    (click)="createGroup(groupid.value, groupname.value)">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Channels</th>
+            <th scope="col">Users</th>
+            <th *ngIf="user.role == 'superAdmin'" scope="col">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let g of groups">
+            <td>{{g.id}}</td>
+            <td>{{g.name}}</td>
+            <td><button class="btn btn-outline-primary" (click)="showChannels(channel, g.id)">Channels</button></td>
+            <td><button class="btn btn-outline-primary" (click)="showUsers(groupUser, g.id)">Users</button></td>
+            <td *ngIf="user.role == 'superAdmin'"><button class="btn btn-outline-danger"
+                    (click)="removeGroup(g.id)">Delete</button></td>
+        </tr>
+    </tbody>
+</table>
+<ng-template #channel let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Channels</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <button *ngIf="user.role == 'superAdmin' || user.role == 'groupAdmin'" class="btn btn-outline-primary"
+    (click)="collapseC.toggle()" [attr.aria-expanded]="!isCollapsedC" aria-controls="collapseGroup">Create</button>
+<div #collapseC="ngbCollapse" [(ngbCollapse)]="isCollapsedC">
+    <div class="card">
+        <div class="card-body row row-cols-lg-auto g-3 align-items-center">
+            <div class="col">
+                <input class="form-control" placeholder="Channel ID" name="id" #channelid>
+            </div>
+            <div class="col">
+                <input class="form-control" placeholder="Channel Name" name="name" #channelname>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-outline-primary"
+                    (click)="createChannel(channelid.value, channelname.value)">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Users</th>
+                    <th *ngIf="user.role == 'groupAdmin' || user.role == 'superAdmin'" scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let c of channels">
+                <tr *ngIf="c.gid == selectedGroup">
+                    <td>{{c.id}}</td>
+                    <td>{{c.name}}</td>
+                    <td><button class="btn btn-outline-primary">Users</button></td>
+                    <td *ngIf="user.role == 'groupAdmin' || user.role == 'superAdmin'"><button
+                            class="btn btn-outline-danger" (click)="removeChannel(c.id)">Delete</button></td>
+                </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>
+<ng-template #groupUser let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Users</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Username</th>
+                    <th *ngIf="user.role == 'groupAdmin' || user.role == 'superAdmin'" scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let u of resultGroupMembers">
+                    <td>{{u.username}}</td>
+                    <td *ngIf="user.role == 'groupAdmin' || user.role == 'superAdmin'"><button
+                            class="btn btn-outline-danger" (click)="removeChannel(u.username)">Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>

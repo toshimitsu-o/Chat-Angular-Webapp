@@ -11,6 +11,8 @@ import { AccountComponent } from './account/account.component';
 import { ProfileComponent } from './profile/profile.component';
 import { CommonModule } from '@angular/common';
 import { SocketService } from './services/socket.service';
+import { AdminComponent } from './admin/admin.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -18,14 +20,16 @@ import { SocketService } from './services/socket.service';
     LoginComponent,
     AccountComponent,
     ProfileComponent,
-    ChatComponent
+    ChatComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    CommonModule
+    CommonModule,
+    NgbModule
   ],
   providers: [SocketService],
   bootstrap: [AppComponent]
