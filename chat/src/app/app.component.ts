@@ -8,7 +8,7 @@ import { AuthService } from './services/auth.service'; // To get/save session
   providers:[AuthService]
 })
 export class AppComponent {
-  title = 'week4tut';
+  title = 'chat';
 
   constructor(private authService: AuthService) { }
 

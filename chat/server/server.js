@@ -33,7 +33,7 @@ console.log(__dirname);
 // });
 
 // Setup Socket
-//sockets.connect(io, PORT);
+sockets.connect(io, PORT);
 
 // Start server listening for requests
 server.listen(http, PORT);

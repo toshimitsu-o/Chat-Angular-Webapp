@@ -1,0 +1,14 @@
+<h1>Chat</h1>
+<form>
+    <div class="form-outline mb-4">
+        <label for="messagecontent" class="form-label">New Message</label>
+        <input type="text" [(ngModel)]="messagecontent" name="messagecontent" id="messageconent" class="form-control" />
+    </div>
+    <div class="form-outline mb-4">
+        <button (click)="chat()" class="btn btn-primary btn-block mb-4">Send</button>
+    </div>
+</form>
+<h2>Messages</h2>
+<ul class="list-group">
+    <li *ngFor="let m of messages" class="list-group-item">{{m}}</li>
+</ul>
