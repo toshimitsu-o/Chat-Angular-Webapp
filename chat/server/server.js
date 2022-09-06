@@ -42,20 +42,19 @@ server.listen(http, PORT);
 
 // Defining class for User
 class User {
-    constructor(username, birthdate, age, email, password, valid) {
+    constructor(username, email, password, role, valid) {
         this.username = username;
-        this.birthdate = birthdate;
-        this.age = age;
         this.email = email;
         this.password = password;
+        this.role = role;
         this.valid = valid;
     }
 }
 
 // Users details
-let user1 = new User("user1", "10/04/2000", 22, "user1@test.com", "user1", false);
-let user2 = new User("user2", "10/05/1990", 32, "user2@test.com", "user2", false);
-let user3 = new User("user3", "10/06/1980", 42, "user3@test.com", "user3", false);
+let user1 = new User("user1", "user1@test.com", "user1", "standard", false);
+let user2 = new User("user2", "user2@test.com", "user2", "superAdmin", false);
+let user3 = new User("user3", "user3@test.com", "user3", "groupAdmin", false);
 // Array of users
 let users = [user1, user2, user3];
 
@@ -72,9 +71,8 @@ app.post('/api/auth', function(req, res){
     for (let i=0; i<users.length; i++) { // Loop over users to test for a match
         if (req.body.email == users[i].email && req.body.upwd == users[i].password) {
             user.username = users[i].username;
-            user.birthdate = users[i].birthdate;
-            user.age = users[i].age;
             user.email = users[i].email;
+            user.role = users[i].role;
             user.valid = true;
         }
     }

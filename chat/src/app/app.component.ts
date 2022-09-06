@@ -9,8 +9,13 @@ import { AuthService } from './services/auth.service'; // To get/save session
 })
 export class AppComponent {
   title = 'chat';
+  user: any;
 
   constructor(private authService: AuthService) { }
+
+  ngOnInit(): void {
+    this.user = this.authService.getSession(); // get user session data
+  }
 
   // Logout and clear session
   logout() {
