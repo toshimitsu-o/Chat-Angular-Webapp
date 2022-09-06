@@ -24,17 +24,7 @@ export class LoginComponent implements OnInit {
   }
 
   // Check login details connecting auth server
-  public login() {
-    let userpwd = {email: this.email, upwd: this.password}
-    this.httpClient.post(BACKEND_URL + '/api/auth', userpwd, httpOptions)
-    .subscribe((data: any) => {
-      if (data.valid) { // if received valid in data is true
-        this.authService.saveSession(data); // save data to session
-        // Navigate to profile page
-        this.router.navigate(['/profile']);
-      } else {
-        alert("Login failed.");
-      }
-    });
+  login() {
+    this.authService.login(this.email, this.password);
   }
 }

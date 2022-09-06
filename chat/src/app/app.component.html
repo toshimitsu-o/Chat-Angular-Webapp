@@ -6,7 +6,7 @@
       <li><a class="nav-link" routerLink="/chat">Chat</a></li>
       <li><a class="nav-link" routerLink="/profile">Profile</a></li>
       <!--<li><a class="nav-link" routerLink="/account">Account</a></li>-->
-      <li><a class="nav-link" routerLink="/admin">Admin</a></li>
+      <li *ngIf="'read' | ablePure: 'Admin' | async"><a class="nav-link" routerLink="/admin">Admin</a></li>
       <li><button type="button" class="btn" (click)="logout()">Logout</button></li>
     </ul>
   </div>
