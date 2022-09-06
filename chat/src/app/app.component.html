@@ -6,8 +6,8 @@
       <li><a class="nav-link" routerLink="/chat">Chat</a></li>
       <li><a class="nav-link" routerLink="/profile">Profile</a></li>
       <!--<li><a class="nav-link" routerLink="/account">Account</a></li>-->
-      <li *ngIf="user.role == 'superAdmin' || user.role == 'groupAdmin'"><a class="nav-link" routerLink="/admin">Admin</a></li>
-      <li *ngIf="user.valid"><button type="button" class="btn" (click)="logout()">Logout</button></li>
+      <li><a class="nav-link" routerLink="/admin">Admin</a></li>
+      <li><button type="button" class="btn" (click)="logout()">Logout</button></li>
     </ul>
   </div>
 </nav>
