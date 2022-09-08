@@ -18,6 +18,8 @@ export class AdminComponent implements OnInit {
   channelMembers = [{username: "user1", cid: "c1"}, {username: "user2", cid: "c2"}, {username: "user3", cid: "c3"}];
   resultMembers: any[] = [];
   selectedGroup = "";
+  selectedUser = "";
+  groupsByUser: any[] = [];
   public isCollapsed = true;
   public isCollapsedC = true;
 
@@ -81,7 +83,7 @@ export class AdminComponent implements OnInit {
   }
 
   // Delete one user
-  deleteUser(user: any) {
+  deleteUser(user: string) {
     if (this.user.role == 'superAdmin') {
       this.users = this.users.filter(u => u.username != user);
     } else {
@@ -96,7 +98,38 @@ export class AdminComponent implements OnInit {
     } else {
       alert("You don't have a permission for this action.");
     }
-    
   }
 
+  // Open a modal to show list of groups that selected user belong to
+  showGroupsByUser(content: any, user: string) {
+    this.selectedUser = user;
+    this.updateGroupsByUser(user); // Update the array
+    this.modalService.open(content, { size: 'lg' });
+  }
+
+  // Add groups to array with Boolean wether the user belongs to the group or not
+  updateGroupsByUser(user: string) {
+    this.groupsByUser = []; // Reset the array
+    this.groups.forEach( i => {
+      // Get group details with Boolean wether the user belongs to or not
+      let group = {id: i.id, name: i.name, member: this.groupMembers.some(g => g.username == user && g.gid == i.id)};
+      this.groupsByUser.push(group); // Add each group to the array
+    });;
+  }
+
+  // Remove the user from the group
+  removeUserFromGroup(user: string, group: string):void {
+    console.log(user, group);
+    this.groupMembers = this.groupMembers.filter(u => {return (u.username != user && u.gid != group)});
+    console.log(this.groupMembers);
+    this.updateGroupsByUser(user);
+  }
+
+  // Add the user to the group
+  addUserToGroup(user: string, group: string) {
+    let item = {username: user, gid: group};
+    this.groupMembers.push(item);
+    console.log(this.groupMembers);
+    this.updateGroupsByUser(user);
+  }
 }

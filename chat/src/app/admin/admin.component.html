@@ -104,7 +104,7 @@
                                 <td class="col-7">
                                     <div class="d-flex justify-content-evenly">
                                         <button class="btn btn-outline-primary btn-sm"
-                                            (click)="showChannels(channel, u.username)">Groups/Channels</button>
+                                            (click)="showGroupsByUser(groupsForUser, u.username)">Groups/Channels</button>
                                         <button class="btn btn-outline-primary btn-sm"
                                             (click)="showChannels(channel, u.username)">Role</button>
                                         <button *ngIf="user.role == 'superAdmin'" class="btn btn-outline-danger btn-sm"
@@ -200,6 +200,47 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>
+<!-- Groups Modal from User -->
+<ng-template #groupsForUser let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{selectedUser}}</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div class="p-2">
+            <table class="table table-hover card">
+                <thead>
+                    <tr class="d-flex align-middle">
+                        <th scope="col" class="col-1"> </th>
+                        <th scope="col" class="col-3">ID</th>
+                        <th scope="col" class="col-4">Name</th>
+                        <th scope="col" class="col-4"> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let g of groupsByUser" class="d-flex">
+                        <td class="col-1"><i *ngIf="g.member" class="bi bi-check-circle-fill text-primary"></i></td>
+                        <td class="col-3" [ngClass]="g.member ? '' : 'text-muted'">{{g.id}}</td>
+                        <td class="col-4" [ngClass]="g.member ? '' : 'text-muted'">{{g.name}}</td>
+                        <td class="col-4">
+                            <div class="d-flex justify-content-evenly">
+                                <button *ngIf="g.member" class="btn btn-outline-danger btn-sm"
+                                    (click)="removeUserFromGroup(selectedUser, g.id)">Remove</button>
+                                <button *ngIf="!g.member" class="btn btn-outline-primary btn-sm"
+                                    (click)="addUserToGroup(selectedUser, g.id)"> Add </button>
+                                <button *ngIf="g.member" class="btn btn-outline-primary btn-sm"
+                                    (click)="showChannels(channel, g.id)">Channels</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">Close</button>
