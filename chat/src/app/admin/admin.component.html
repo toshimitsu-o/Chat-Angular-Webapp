@@ -94,19 +94,25 @@
                     <table class="table table-hover card">
                         <thead>
                             <tr class="d-flex align-middle">
-                                <th scope="col" class="col-5">Username</th>
-                                <th scope="col" class="col-7"> </th>
+                                <th scope="col" class="col-4">Username</th>
+                                <th scope="col" class="col-4">Admin Role</th>
+                                <th scope="col" class="col-4"> </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let u of users" class="d-flex align-middle">
-                                <td class="col-5">{{u.username}}</td>
-                                <td class="col-7">
+                                <td class="col-4">{{u.username}}</td>
+                                <td class="col-4">
+                                    <div  class="btn-group" role="group">
+                                    <button *ngIf="user.role == 'superAdmin'" class="btn btn-sm" [ngClass]="u.role == 'superAdmin' ? 'btn-primary' : 'btn-outline-primary'" (click)="updateUserRole(u.username, 'superAdmin')">Super</button>
+                                    <button  *ngIf="user.role == 'superAdmin'" class="btn btn-sm" [ngClass]="u.role == 'groupAdmin' ? 'btn-primary' : 'btn-outline-primary'" (click)="updateUserRole(u.username, 'groupAdmin')">Group</button>
+                                    <button *ngIf="user.role == 'superAdmin' || user.role == 'groupAdmin'" class="btn btn-sm" [ngClass]="u.role == 'groupAssis' ? 'btn-primary' : 'btn-outline-primary'" (click)="updateUserRole(u.username, 'groupAssis')">Assistant</button>
+                                </div>
+                                </td>
+                                <td class="col-4">
                                     <div class="d-flex justify-content-evenly">
                                         <button class="btn btn-outline-primary btn-sm"
                                             (click)="showGroupsByUser(groupsForUser, u.username)">Groups/Channels</button>
-                                        <button class="btn btn-outline-primary btn-sm"
-                                            (click)="showChannels(channel, u.username)">Role</button>
                                         <button *ngIf="user.role == 'superAdmin'" class="btn btn-outline-danger btn-sm"
                                             (click)="deleteUser(u.username)">Delete</button>
                                     </div>

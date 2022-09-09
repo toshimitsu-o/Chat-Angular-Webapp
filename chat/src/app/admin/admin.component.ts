@@ -10,7 +10,7 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 export class AdminComponent implements OnInit {
 
   user: any;
-  users = [{username: "user1"}, {username: "user2"}, {username: "user3"}]; 
+  users = [{username: "user1", role: "user"}, {username: "user2", role: "superAdmin"}, {username: "user3", role: "groupAdmin"}]; 
   groups = [{id: "g1", name:"Group 1"}, {id: "g2", name:"Group 2"}, {id: "g3", name:"Group 3"}];
   channels = [{id: "c1", name:"Channel 1", gid: "g1"}, {id: "c2", name:"Channel 2", gid: "g1"}, {id: "c3", name:"Channel 3",  gid: "g2"}];
   resultChannels: any[] = [];
@@ -101,7 +101,7 @@ export class AdminComponent implements OnInit {
     if (this.users.find(u => u.username == username)) { // Check if already exist
       alert("Username already taken!");
     } else {
-      this.users.push({username: username});
+      this.users.push({username: username, role: "user"});
     }
   }
 
@@ -201,5 +201,13 @@ export class AdminComponent implements OnInit {
     let item = {username: user, cid: channel};
     this.channelMembers.push(item);
     this.updateChannelsByUser(user, group);
+  }
+
+  // Update user's role
+  updateUserRole(user: string, role: string):void {
+    const target = this.users.find(u => u.username == user);
+    if (target) {
+      target.role = role;
+    }
   }
 }

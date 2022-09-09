@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { SocketService } from './services/socket.service';
 import { AdminComponent } from './admin/admin.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SidenavComponent } from './sidenav/sidenav.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AccountComponent,
     ProfileComponent,
     ChatComponent,
-    AdminComponent
+    AdminComponent,
+    SidenavComponent
   ],
   imports: [
     BrowserModule,

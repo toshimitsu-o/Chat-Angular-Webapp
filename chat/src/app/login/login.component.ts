@@ -30,8 +30,8 @@ export class LoginComponent implements OnInit {
     .subscribe((data: any) => {
       if (data.valid) { // if received valid in data is true
         this.authService.saveSession(data); // save data to session
-        // Navigate to profile page
-        this.router.navigate(['/profile']);
+        // Relocate
+        this.router.navigate(['/account']);
       } else {
         alert("Login failed.");
       }

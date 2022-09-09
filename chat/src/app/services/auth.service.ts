@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  user: any;
+  user: any = "";
 
   constructor(private router: Router) { }
 
@@ -21,9 +22,11 @@ export class AuthService {
     }
     return this.user;
   }
+
   // Save to session storage
   saveSession(data: any) {
-    sessionStorage.setItem("user", JSON.stringify(data));
+    this.user = JSON.stringify(data);
+    sessionStorage.setItem("user", this.user);
   }
 
   // Clear session to Logout

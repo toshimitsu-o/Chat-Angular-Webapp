@@ -52,7 +52,7 @@ class User {
 }
 
 // Users details
-let user1 = new User("user1", "user1@test.com", "user1", "standard", false);
+let user1 = new User("user1", "user1@test.com", "user1", "user", false);
 let user2 = new User("user2", "user2@test.com", "user2", "superAdmin", false);
 let user3 = new User("user3", "user3@test.com", "user3", "groupAdmin", false);
 // Array of users

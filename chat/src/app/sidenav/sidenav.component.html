@@ -1,0 +1,26 @@
+<a href="/" class="d-block p-3 link-dark text-decoration-none" title="Icon-only" data-bs-toggle="tooltip" data-bs-placement="right">
+    <svg class="bi pe-none" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+    <span class="visually-hidden">Icon-only</span>
+  </a>
+  <ul class="nav nav-pills nav-flush flex-column mb-auto text-center" *ngIf="user">
+    <li class="nav-item">
+      <a routerLink="/chat" class="nav-link py-3 border-bottom rounded-0" aria-current="page" title="Chat" placement="end" ngbTooltip="Chat">
+        <svg class="bi pe-none" width="24" height="24" role="img" aria-label="Home"><use xlink:href="#home"/></svg>
+      </a>
+    </li>
+    <li class="nav-item" *ngIf="user.role != 'user'">
+      <a routerLink="/admin" class="nav-link py-3 border-bottom rounded-0" aria-current="page" title="Admin" placement="end" ngbTooltip="Admin">
+        <svg class="bi pe-none" width="24" height="24" role="img" aria-label="Home"><use xlink:href="#home"/></svg>
+      </a>
+    </li>
+  </ul>
+  <div class="border-top" ngbDropdown placement="top-start" *ngIf="user">
+    <a class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none"  id="dropdownBasic2" ngbDropdownToggle>
+      <img src="https://github.com/mdo.png" alt="mdo" width="24" height="24" class="rounded-circle">
+    </a>
+    <ul ngbDropdownMenu aria-labelledby="dropdownBasic2">
+      <li ngbDropdownItem><a class="nav-link" routerLink="/profile">Profile</a></li>
+      <li ngbDropdownItem><a class="nav-link" routerLink="/profile">Profile</a></li>
+      <li ngbDropdownItem><a class="nav-link" href="#" (click)="logout()">Logout</a></li>
+    </ul>
+  </div>
