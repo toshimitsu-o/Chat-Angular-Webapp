@@ -17,9 +17,12 @@ export class AdminComponent implements OnInit {
   groupMembers = [{username: "user1", gid: "g1"}, {username: "user2", gid: "g2"}, {username: "user3", gid: "g3"}];
   channelMembers = [{username: "user1", cid: "c1"}, {username: "user2", cid: "c2"}, {username: "user3", cid: "c3"}];
   resultMembers: any[] = [];
+  memberFilter = "";
   selectedGroup = "";
+  selectedChannel = "";
   selectedUser = "";
   groupsByUser: any[] = [];
+  channelsByUser: any[] = [];
   public isCollapsed = true;
   public isCollapsedC = true;
 
@@ -45,12 +48,18 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  removeGroup(id: string): void {
-    this.groups = this.groups.filter(g => g.id != id)
+  // Delete the group and channels under the group
+  deleteGroup(id: string): void {
+    this.groups = this.groups.filter(g => g.id != id);
+    // Delete all channels under the group
+    this.channels.filter(c => c.gid == id).forEach(i => {
+      this.deleteChannel(i.id);
+    });
   }
 
-  removeChannel(id: string): void {
-    this.channels = this.channels.filter(c => c.id != id)
+  // Delete the channel
+  deleteChannel(id: string): void {
+    this.channels = this.channels.filter(c => c.id != id);
   }
 
   // Open a modal to show a list of channels
@@ -59,21 +68,35 @@ export class AdminComponent implements OnInit {
     this.modalService.open(content, { size: 'lg' });
   }
 
-  // Open a modal to show a list of users
+  // Open a modal to show a user list of group/channel
   showMembers(content: any, filter: string, id: string): void {
-    let targetMembers;
     if (filter == "group") { // Show only from the group
-      targetMembers = this.groupMembers.filter(m => m.gid == id);
+      this.selectedGroup = id;
+      this.resultMembers = this.groupMembers.filter(m => m.gid == id);
     } else if (filter == "channel") { // Show only from the channel
-      targetMembers = this.channelMembers.filter(m => m.cid == id);
+      this.selectedChannel = id;
+      this.resultMembers = this.channelMembers.filter(m => m.cid == id);
     } else { // Show all
-      targetMembers = this.users;
+      this.resultMembers = this.users;
     }
-    this.resultMembers = targetMembers;
+    this.memberFilter = filter;
     this.modalService.open(content, { size: 'lg' });
   }
 
+  // remove the member from group/channel
+  removeMember(user: string):void {
+    if (this.memberFilter == "group") { // Check filter mode
+      this.removeUserFromGroup(user, this.selectedGroup);
+      this.resultMembers = this.groupMembers.filter(m => m.gid == this.selectedGroup); // Update the member list for display
+    } else if (this.memberFilter == "channel") {
+      this.removeUserFromChannel(user, this.selectedChannel, this.selectedGroup);
+      this.resultMembers = this.channelMembers.filter(m => m.cid == this.selectedChannel);
+    } else {
+      alert("Group/Channel not specified.");
+    }
+  }
 
+  // Create a new user
   createUser(username: string, email: string, password: string): void {
     if (this.users.find(u => u.username == username)) { // Check if already exist
       alert("Username already taken!");
@@ -84,7 +107,7 @@ export class AdminComponent implements OnInit {
 
   // Delete one user
   deleteUser(user: string) {
-    if (this.user.role == 'superAdmin') {
+    if (this.user.role == 'superAdmin') { // Check the user role
       this.users = this.users.filter(u => u.username != user);
     } else {
       alert("You don't have a permission for this action.");
@@ -119,17 +142,64 @@ export class AdminComponent implements OnInit {
 
   // Remove the user from the group
   removeUserFromGroup(user: string, group: string):void {
-    console.log(user, group);
-    this.groupMembers = this.groupMembers.filter(u => {return (u.username != user && u.gid != group)});
-    console.log(this.groupMembers);
+    this.groupMembers = this.groupMembers.filter(u => {
+      if (u.username != user) {
+        return true;
+      } else if (u.gid != group) {
+        return true;
+      } else {
+        return false;
+      }
+    });
     this.updateGroupsByUser(user);
+    // Remove the user from chanels under the group
+    this.channels.filter(c => c.gid == group).forEach(i => {
+      this.removeUserFromChannel(user, i.id, group);
+    });
   }
 
   // Add the user to the group
   addUserToGroup(user: string, group: string) {
     let item = {username: user, gid: group};
     this.groupMembers.push(item);
-    console.log(this.groupMembers);
     this.updateGroupsByUser(user);
+  }
+
+   // Open a modal to show list of Channels that selected user belong to
+   showChannelsByUser(content: any, user: string, group: string) {
+    this.selectedUser = user;
+    this.updateChannelsByUser(user, group); // Update the array
+    this.modalService.open(content, { size: 'lg' });
+  }
+
+   // Add channels to array with Boolean wether the user belongs to the channels or not
+   updateChannelsByUser(user: string, group: string) {
+    this.channelsByUser = []; // Reset the array
+    this.channels.filter(c => c.gid == group).forEach( i => { // Make an array of channels under the group
+      // Get channel details with Boolean wether the user belongs to or not
+      let channel = {id: i.id, name: i.name, gid: group, member: this.channelMembers.some(j => j.username == user && j.cid == i.id)};
+      this.channelsByUser.push(channel); // Add each group to the array
+    });;
+  }
+
+  // Remove the user from the group
+  removeUserFromChannel(user: string, channel: string, group: string):void {
+    this.channelMembers = this.channelMembers.filter(u => {
+      if (u.username != user) {
+        return true;
+      } else if (u.cid != channel) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    this.updateChannelsByUser(user, group);
+  }
+
+  // Add the user to the group
+  addUserToChannel(user: string, channel: string, group: string) {
+    let item = {username: user, cid: channel};
+    this.channelMembers.push(item);
+    this.updateChannelsByUser(user, group);
   }
 }

@@ -49,7 +49,7 @@
                                         <button class="btn btn-outline-primary btn-sm"
                                             (click)="showMembers(groupUser, 'group', g.id)">Users</button>
                                         <button *ngIf="user.role == 'superAdmin'" class="btn btn-outline-danger btn-sm"
-                                            (click)="removeGroup(g.id)">Delete</button>
+                                            (click)="deleteGroup(g.id)">Delete</button>
                                     </div>
                                 </td>
                             </tr>
@@ -168,7 +168,7 @@
                         <td>{{c.name}}</td>
                         <td><button class="btn btn-outline-primary" (click)="showMembers(groupUser, 'channel', c.id)">Users</button></td>
                         <td *ngIf="user.role == 'groupAdmin' || user.role == 'superAdmin'"><button
-                                class="btn btn-outline-danger" (click)="removeChannel(c.id)">Delete</button></td>
+                                class="btn btn-outline-danger" (click)="deleteChannel(c.id)">Delete</button></td>
                     </tr>
                 </ng-container>
             </tbody>
@@ -195,8 +195,9 @@
             <tbody>
                 <tr *ngFor="let u of resultMembers">
                     <td>{{u.username}}</td>
-                    <td *ngIf="user.role == 'groupAdmin' || user.role == 'superAdmin'"><button
-                            class="btn btn-outline-danger" (click)="removeChannel(u.username)">Delete</button></td>
+                    <td *ngIf="user.role == 'groupAdmin' || user.role == 'superAdmin'">
+                        <button class="btn btn-outline-danger" (click)="removeMember(u.username)">Remove</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -234,7 +235,46 @@
                                 <button *ngIf="!g.member" class="btn btn-outline-primary btn-sm"
                                     (click)="addUserToGroup(selectedUser, g.id)"> Add </button>
                                 <button *ngIf="g.member" class="btn btn-outline-primary btn-sm"
-                                    (click)="showChannels(channel, g.id)">Channels</button>
+                                    (click)="showChannelsByUser(channelsForUser, selectedUser, g.id)">Channels</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>
+<!-- Channel Modal from User -->
+<ng-template #channelsForUser let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{selectedUser}}</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div class="p-2">
+            <table class="table table-hover card">
+                <thead>
+                    <tr class="d-flex align-middle">
+                        <th scope="col" class="col-1"> </th>
+                        <th scope="col" class="col-3">ID</th>
+                        <th scope="col" class="col-4">Name</th>
+                        <th scope="col" class="col-4"> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let c of channelsByUser" class="d-flex">
+                        <td class="col-1"><i *ngIf="c.member" class="bi bi-check-circle-fill text-primary"></i></td>
+                        <td class="col-3" [ngClass]="c.member ? '' : 'text-muted'">{{c.id}}</td>
+                        <td class="col-4" [ngClass]="c.member ? '' : 'text-muted'">{{c.name}}</td>
+                        <td class="col-4">
+                            <div class="d-flex justify-content-evenly">
+                                <button *ngIf="c.member" class="btn btn-outline-danger btn-sm"
+                                    (click)="removeUserFromChannel(selectedUser, c.id, c.gid)">Remove</button>
+                                <button *ngIf="!c.member" class="btn btn-outline-primary btn-sm"
+                                    (click)="addUserToChannel(selectedUser, c.id, c.gid)"> Add </button>
                             </div>
                         </td>
                     </tr>
