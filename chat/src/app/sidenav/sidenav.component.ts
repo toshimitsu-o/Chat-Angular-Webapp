@@ -16,6 +16,10 @@ export class SidenavComponent implements OnInit {
     this.user = this.authService.getSession(); // get user session data
   }
 
+  ngDoCheck(): void {
+    //this.user = this.authService.getSession(); // get user session data
+  }
+
   // Logout and clear session
   logout() {
     this.authService.logout(); // Logout via service

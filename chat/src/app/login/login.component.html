@@ -1,15 +1,25 @@
-<h1>Login</h1>
-    <!-- Email input -->
-    <div class="form-outline mb-4">
-      <input type="email" id="form2Example1" class="form-control" [(ngModel)]="email" name="email" />
-      <label class="form-label" for="form2Example1">Email address</label>
+    <div style="height: 100%;display: flex; align-items: center; padding-top: 40px; padding-bottom: 40px;">
+    <div class="form-signin w-100 m-auto text-center">
+      <form>
+        <img class="mb-4" src="/docs/5.2/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+        <h1 class="h3 mb-3 fw-normal">Welcome back!</h1>
+    
+        <div class="form-floating">
+          <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" [(ngModel)]="email" name="email">
+          <label for="floatingInput">Email</label>
+        </div>
+        <div class="form-floating">
+          <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password" [(ngModel)]="password">
+          <label for="floatingPassword">Password</label>
+        </div>
+    
+        <div class="checkbox mb-3">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit" (click)="login()">Sign in</button>
+        <p class="mt-5 mb-3 text-muted">&copy; 2022</p>
+      </form>
     </div>
-  
-    <!-- Password input -->
-    <div class="form-outline mb-4">
-      <input type="password" id="form2Example2" class="form-control" [(ngModel)]="password" name="password" />
-      <label class="form-label" for="form2Example2">Password</label>
     </div>
-  
-    <!-- Submit button -->
-    <button type="button" class="btn btn-primary btn-block mb-4" (click)="login()">Sign in</button>
