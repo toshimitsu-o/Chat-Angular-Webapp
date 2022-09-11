@@ -34,6 +34,7 @@ export class AuthService {
     this.user = JSON.stringify(data);
     sessionStorage.setItem("user", this.user);
   }
+  
 
   // Update user info
   userUpdate(user: any){

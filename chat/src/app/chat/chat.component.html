@@ -46,6 +46,30 @@
             <a ngbNavLink>Channel 2</a>
             <ng-template ngbNavContent>
                 <!-- Groups content-->
+                <ul class="list-group mb-2">
+                    <li *ngFor="let m of messages" class="list-group-item">
+                        <div class="p-2">
+                            <img src="./assets/images/user.jpg" alt="mdo" width="28" height="28"
+                                class="rounded-circle">
+                            Username
+                        </div>
+                        <div class="card border-0">
+                            <div class="card-body p-2"> {{m}}</div>
+                        </div>
+                    </li>
+                </ul>
+                <form class="sticky-bottom">
+                    <div class="card p-2 bg-light">
+                        <div class="input-group mb-0">
+                            <input type="text" [(ngModel)]="messagecontent" name="messagecontent" id="messageconent"
+                                class="form-control border-0 bg-light" placeholder="Message">
+                            <div class="input-group-prepend">
+                                <button (click)="chat()" class="btn btn-outline-primary btn-block input-group-text"><i
+                                        class="bi bi-send"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
                 <!-- Groups content end -->
             </ng-template>
