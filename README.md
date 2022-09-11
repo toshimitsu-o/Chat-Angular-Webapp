@@ -1,6 +1,6 @@
 # Assignment 1: Chatty - Chat System
 
-# Git repository Organisation
+## Git repository Organisation
 
 Github: [https://github.com/toshimitsu-o/3813ICT-assignment](https://github.com/toshimitsu-o/3813ICT-assignment)
 
@@ -8,188 +8,188 @@ The git repository of this project contains code files and a readme file. The ro
 
 There are a few branches that remained unmerged to the main branch due to incomplete feature development. Commits and pushes were made regularly to maintain the repository trackable in case of issues.
 
-# Data Structure
+## Data Structure
 
 The following diagram depicts the data structure in this program. Each is stored as a JSON file in the Node server which will be replaced by MongoDB data collections at later stage of the development. These files are read and saved via the Express server.
 
 ![Class Diagram](https://github.com/toshimitsu-o/3813ICT-assignment/blob/main/Chatsystemdiagram.png "Class Diagram")
 
-## Client side
+### Client side
 
 The data of the extended user from the server will be saved to the local session storage when users sign in. The session storage will be cleared when users log out.
 
-# REST API
+## REST API
 
 The followings are the APIs that the program utilises to communicate between the server and the client to retrieve and save data. The data will be saved to the server when anything is modified.
 
-## Auth
+### Auth
 
-| _ **Route** _ | /auth/login |
+| **Route** | /auth/login |
 | --- | --- |
-| _ **Method** _ | POST |
-| _ **Parameters** _ | username: string, pwd: string |
-| _ **Return values** _ | user: object {username: string, email: string, role: string} |
-| _ **Description** _ | User authentication with password and return user details. |
+| **Method** | POST |
+| **Parameters** | username: string, pwd: string |
+| **Return values** | user: object {username: string, email: string, role: string} |
+| **Description** | User authentication with password and return user details. |
 
-## Update
+### Update
 
-| _ **Route** _ | /auth/update |
+| **Route** | /auth/update |
 | --- | --- |
-| _ **Method** _ | POST |
-| _ **Parameters** _ | user: object {username: string, email: string, role: string} |
-| _ **Return values** _ | user: object {username: string, email: string, role: string} |
-| _ **Description** _ | Update user details. |
+| **Method** | POST |
+| **Parameters** | user: object {username: string, email: string, role: string} |
+| **Return values** | user: object {username: string, email: string, role: string} |
+| **Description** | Update user details. |
 
-## Users Admin
+### Users Admin
 
-| _ **Route** _ | /admin/users |
+| **Route** | /admin/users |
 | --- | --- |
-| _ **Method** _ | GET |
-| _ **Parameters** _ | None |
-| _ **Return values** _ | Array of user: object {username: string, email: string, role: string} |
-| _ **Description** _ | Retrieves all user data for super admin and group admin users. |
+| **Method** | GET |
+| **Parameters** | None |
+| **Return values** | Array of user: object {username: string, email: string, role: string} |
+| **Description** | Retrieves all user data for super admin and group admin users. |
 
-## Users Admin
+### Users Admin
 
-| _ **Route** _ | /admin/users |
+| **Route** | /admin/users |
 | --- | --- |
-| _ **Method** _ | POST |
-| _ **Parameters** _ | user: object {username: string, email: string, role: string} |
-| _ **Return values** _ | Array of user: object {username: string, email: string, role: string} |
-| _ **Description** _ | Create a new user and get user data as return. |
+| **Method** | POST |
+| **Parameters** | user: object {username: string, email: string, role: string} |
+| **Return values** | Array of user: object {username: string, email: string, role: string} |
+| **Description** | Create a new user and get user data as return. |
 
-## Users Admin
+### Users Admin
 
-| _ **Route** _ | /admin/users/:id |
+| **Route** | /admin/users/:id |
 | --- | --- |
-| _ **Method** _ | PUT |
-| _ **Parameters** _ | user: object {username: string, email: string, role: string} |
-| _ **Return values** _ | Array of user: object {username: string, email: string, role: string} |
-| _ **Description** _ | Update user data |
+| **Method** | PUT |
+| **Parameters** | user: object {username: string, email: string, role: string} |
+| **Return values** | Array of user: object {username: string, email: string, role: string} |
+| **Description** | Update user data |
 
-## Users Admin
+### Users Admin
 
-| _ **Route** _ | /admin/users/:id/:by |
+| **Route** | /admin/users/:id/:by |
 | --- | --- |
-| _ **Method** _ | DELETE |
-| _ **Parameters** _ | none |
-| _ **Return values** _ | Array of user: object {username: string, email: string, role: string} |
-| _ **Description** _ | Delete one user or all users except the current user. The current username will be passed through :by. |
+| **Method** | DELETE |
+| **Parameters** | none |
+| **Return values** | Array of user: object {username: string, email: string, role: string} |
+| **Description** | Delete one user or all users except the current user. The current username will be passed through :by. |
 
-## Groups
+### Groups
 
-| _ **Route** _ | /group/:gid |
+| **Route** | /group/:gid |
 | --- | --- |
-| _ **Method** _ | GET |
-| _ **Parameters** _ | None |
-| _ **Return values** _ | Array of group: object {id: string, name: string} |
-| _ **Description** _ | Retrieves one or all group data. |
+| **Method** | GET |
+| **Parameters** | None |
+| **Return values** | Array of group: object {id: string, name: string} |
+| **Description** | Retrieves one or all group data. |
 
-## Groups
+### Groups
 
-| _ **Route** _ | /group/:gid |
+| **Route** | /group/:gid |
 | --- | --- |
-| _ **Method** _ | PUT |
-| _ **Parameters** _ | Array of group: object {id: string, name: string} |
-| _ **Return values** _ | Array of group: object {id: string, name: string} |
-| _ **Description** _ | Update one or all group data. |
+| **Method** | PUT |
+| **Parameters** | Array of group: object {id: string, name: string} |
+| **Return values** | Array of group: object {id: string, name: string} |
+| **Description** | Update one or all group data. |
 
-## Channels
+### Channels
 
-| _ **Route** _ | /channel/:cid |
+| **Route** | /channel/:cid |
 | --- | --- |
-| _ **Method** _ | GET |
-| _ **Parameters** _ | None |
-| _ **Return values** _ | Array of channel: object {id: string, name: string, gid: string} |
-| _ **Description** _ | Retrieves one or all channel data. |
+| **Method** | GET |
+| **Parameters** | None |
+| **Return values** | Array of channel: object {id: string, name: string, gid: string} |
+| **Description** | Retrieves one or all channel data. |
 
-## Channels
+### Channels
 
-| _ **Route** _ | /channel/:cid |
+| **Route** | /channel/:cid |
 | --- | --- |
-| _ **Method** _ | PUT |
-| _ **Parameters** _ | Array of channel: object {id: string, name: string, gid: string} |
-| _ **Return values** _ | Array of channel: object {id: string, name: string, gid: string } |
-| _ **Description** _ | Update one or all channel data. |
+| **Method** | PUT |
+| **Parameters** | Array of channel: object {id: string, name: string, gid: string} |
+| **Return values** | Array of channel: object {id: string, name: string, gid: string } |
+| **Description** | Update one or all channel data. |
 
-## Group Member
+### Group Member
 
-| _ **Route** _ | /member/group/:gid |
+| **Route** | /member/group/:gid |
 | --- | --- |
-| _ **Method** _ | GET |
-| _ **Parameters** _ | None |
-| _ **Return values** _ | Array of group member: object {username: string, gid: string} |
-| _ **Description** _ | Retrieves one or all group member data. |
+| **Method** | GET |
+| **Parameters** | None |
+| **Return values** | Array of group member: object {username: string, gid: string} |
+| **Description** | Retrieves one or all group member data. |
 
-## Group Member
+### Group Member
 
-| _ **Route** _ | /member/group/:gid |
+| **Route** | /member/group/:gid |
 | --- | --- |
-| _ **Method** _ | PUT |
-| _ **Parameters** _ | Array of group member: object {username: string, gid: string} |
-| _ **Return values** _ | Array of group member: object {username: string, gid: string} |
-| _ **Description** _ | Update one or all group member data. |
+| **Method** | PUT |
+| **Parameters** | Array of group member: object {username: string, gid: string} |
+| **Return values** | Array of group member: object {username: string, gid: string} |
+| **Description** | Update one or all group member data. |
 
-## Channel Member
+### Channel Member
 
-| _ **Route** _ | /member/channel/:gid/:cid |
+| **Route** | /member/channel/:gid/:cid |
 | --- | --- |
-| _ **Method** _ | GET |
-| _ **Parameters** _ | None |
-| _ **Return values** _ | Array of channel member: object {username: string, cid: string} |
-| _ **Description** _ | Retrieves one or all channel member data. |
+| **Method** | GET |
+| **Parameters** | None |
+| **Return values** | Array of channel member: object {username: string, cid: string} |
+| **Description** | Retrieves one or all channel member data. |
 
-## Group Member
+### Group Member
 
-| _ **Route** _ | / member/channel/:gid/:cid |
+| **Route** | / member/channel/:gid/:cid |
 | --- | --- |
-| _ **Method** _ | PUT |
-| _ **Parameters** _ | Array of channel member: object {username: string, cid: string} |
-| _ **Return values** _ | Array of channel member: object {username: string, cid: string} |
-| _ **Description** _ | Update one or all channel member data. |
+| **Method** | PUT |
+| **Parameters** | Array of channel member: object {username: string, cid: string} |
+| **Return values** | Array of channel member: object {username: string, cid: string} |
+| **Description** | Update one or all channel member data. |
 
-# Angular Architecture
+## Angular Architecture
 
 The followings explain the structure of Angular framework that the program uses for the front end.
 
-## Components
+### Components
 
-### Admin
+#### Admin
 
 This is to control and display the page for admin users to manage the groups, channels, and users. Modal views are utilised for users to control sections to view and update data.
 
-### Chat
+#### Chat
 
 This is to display and provide the chat messaging functionalities. Vertical tab navigation is used to display channels.
 
-### Login
+#### Login
 
 This is the first view that users will interact to login to the system. The side navigation will be hidden in this section.
 
-### Profile
+#### Profile
 
 Users can see and update their details. The image file selector will be in this section to update users' profile picture.
 
-### Sidenav
+#### Sidenav
 
 The side navigation column will be stored in this component. After login, users will see groups that they belong to and they can access to profile page and logoff link.
 
-## Services
+### Services
 
-### Auth
+#### Auth
 
 The functionalities to read and save user authentication data are stored in this section for other components to access.
 
-### Socket
+#### Socket
 
 The connection and setup functionalities related to Socket.io are stored in this section for other components to access.
 
-## Models
+### Models
 
-### Group
+#### Group
 
 Classes and interfaces for group and channel will be defined in this section.
 
-### User
+#### User
 
 Class and interface for user will be defined in this section.
