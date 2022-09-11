@@ -37,11 +37,12 @@ export class AuthService {
 
   // Update user info
   userUpdate(user: any){
-    // Save to session storage
-    this.saveSession(user);
     // Save to server
     this.httpClient.post<Userobj[]>(BACKEND_URL + '/auth/update', user,  httpOptions)
-      .subscribe((m: any) => {alert(JSON.stringify(m));});
+      .subscribe((data: any) => {
+        // Save to session storage
+      this.saveSession(data);
+      });
   }
 
   // Clear session to Logout

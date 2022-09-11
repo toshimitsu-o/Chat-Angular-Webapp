@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { Userobj } from '../models/user';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json'})
+};
+const BACKEND_URL = "http://localhost:3000";
 
 @Component({
   selector: 'app-admin',
@@ -10,7 +16,7 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 export class AdminComponent implements OnInit {
 
   user: any;
-  users = [{username: "user1", role: "user"}, {username: "user2", role: "superAdmin"}, {username: "user3", role: "groupAdmin"}]; 
+  users: any[] = []; 
   groups = [{id: "g1", name:"Group 1"}, {id: "g2", name:"Group 2"}, {id: "g3", name:"Group 3"}];
   channels = [{id: "c1", name:"Channel 1", gid: "g1"}, {id: "c2", name:"Channel 2", gid: "g1"}, {id: "c3", name:"Channel 3",  gid: "g2"}];
   resultChannels: any[] = [];
@@ -26,10 +32,13 @@ export class AdminComponent implements OnInit {
   public isCollapsed = true;
   public isCollapsedC = true;
 
-  constructor(private authService: AuthService, private modalService: NgbModal) { }
+  constructor(private authService: AuthService, private modalService: NgbModal, private httpClient: HttpClient) { }
 
   ngOnInit(): void {
     this.user = this.authService.getSession(); // get user session data
+    if (this.user.role == "superAdmin" || this.user.role == "groupAdmin") {
+      this.getUsers();
+    }
   }
 
   createGroup(id: string, name: string): void {
@@ -96,12 +105,32 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  // Get users data from server
+  getUsers() {
+    this.httpClient.get(BACKEND_URL + '/admin/users/get', httpOptions)
+    .subscribe((data: any) => {
+      if (data) {
+        this.users = data;
+      } else {
+        alert("Users data failed.");
+      }
+    });
+  }
+
   // Create a new user
   createUser(username: string, email: string, password: string): void {
     if (this.users.find(u => u.username == username)) { // Check if already exist
       alert("Username already taken!");
     } else {
-      this.users.push({username: username, role: "user"});
+      let newUser = {username: username, email: email, role: "user"};
+      this.httpClient.post<Userobj[]>(BACKEND_URL + '/admin/users/create', newUser, httpOptions)
+      .subscribe((data: any) => {
+        if (data) {
+          this.users = data;
+        } else {
+          alert("User creation failed.");
+        }
+      });
     }
   }
 

@@ -38,26 +38,9 @@ sockets.connect(io, PORT);
 // Start server listening for requests
 server.listen(http, PORT);
 
-// Authentication
-
-// Defining class for User
-class User {
-    constructor(username, email, password, role, valid) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.valid = valid;
-    }
-}
-
-// Users details
-let user1 = new User("user1", "user1@test.com", "user1", "user", false);
-let user2 = new User("user2", "user2@test.com", "user2", "superAdmin", false);
-let user3 = new User("user3", "user3@test.com", "user3", "groupAdmin", false);
-// Array of users
-let users = [user1, user2, user3];
-
-// Route for API authentication
+// Routes for API authentication
 app.post('/auth/login', require('./router/userLogin.js'));
 app.post('/auth/update', require('./router/userUpdate.js'));
+// Routes for API admin
+app.get('/admin/users/:func', require('./router/adminUsers.js'));
+app.post('/admin/users/:func', require('./router/adminUsers.js'));

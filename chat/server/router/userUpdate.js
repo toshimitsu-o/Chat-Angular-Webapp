@@ -20,7 +20,7 @@ module.exports = function(req, res) {
             uArray[i] = userobj;
         }
         // send response to user
-        res.send(uArray);
+        res.send(userobj);
         // save the file of user list
         let uArrayjson = JSON.stringify(uArray);
         fs.writeFile('./data/extendedUsers.json', uArrayjson, 'utf-8', function(err) {
