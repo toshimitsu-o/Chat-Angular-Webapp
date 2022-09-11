@@ -12,7 +12,9 @@ There are a few branches that remained unmerged to the main branch due to incomp
 
 The following diagram depicts the data structure in this program. Each is stored as a JSON file in the Node server which will be replaced by MongoDB data collections at later stage of the development. These files are read and saved via the Express server.
 
-![](RackMultipart20220911-1-1wlrag_html_9f383e3bfa47c9aa.png)Client side
+![Class Diagram](https://github.com/toshimitsu-o/3813ICT-assignment/blob/main/Chatsystemdiagram.png "Class Diagram")
+
+## Client side
 
 The data of the extended user from the server will be saved to the local session storage when users sign in. The session storage will be cleared when users log out.
 
