@@ -15,7 +15,7 @@ const BACKEND_URL = "http://localhost:3000";
   providers:[AuthService]
 })
 export class LoginComponent implements OnInit {
-  email:string = "";
+  username:string = "";
   password:string = "";
 
   constructor(private router: Router, private httpClient: HttpClient, private authService: AuthService) { }
@@ -25,8 +25,8 @@ export class LoginComponent implements OnInit {
 
   // Check login details connecting auth server
   public login() {
-    let userpwd = {email: this.email, upwd: this.password}
-    this.httpClient.post(BACKEND_URL + '/api/auth', userpwd, httpOptions)
+    let user = {username:this.username, pwd: this.password};
+    this.httpClient.post(BACKEND_URL + '/auth/login', user, httpOptions)
     .subscribe((data: any) => {
       if (data.valid) { // if received valid in data is true
         this.authService.saveSession(data); // save data to session

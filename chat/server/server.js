@@ -59,22 +59,5 @@ let user3 = new User("user3", "user3@test.com", "user3", "groupAdmin", false);
 let users = [user1, user2, user3];
 
 // Route for API authentication
-app.post('/api/auth', function(req, res){
-
-    if (!req.body) {
-        return res.sendStatus(400);
-    }
-
-    let user = new User(); // create a new user object
-    user.valid = false;
-
-    for (let i=0; i<users.length; i++) { // Loop over users to test for a match
-        if (req.body.email == users[i].email && req.body.upwd == users[i].password) {
-            user.username = users[i].username;
-            user.email = users[i].email;
-            user.role = users[i].role;
-            user.valid = true;
-        }
-    }
-    res.send(user);
-});
+app.post('/auth/login', require('./router/userLogin.js'));
+app.post('/auth/update', require('./router/userUpdate.js'));

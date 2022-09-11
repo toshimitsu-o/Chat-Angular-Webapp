@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json'})
+};
+import { Userobj } from '../models/user';
+
+const BACKEND_URL = "http://localhost:3000";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +15,7 @@ export class AuthService {
 
   user: any = "";
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private httpClient: HttpClient) { }
 
   // Read from session storage
   getSession() {
@@ -27,6 +33,15 @@ export class AuthService {
   saveSession(data: any) {
     this.user = JSON.stringify(data);
     sessionStorage.setItem("user", this.user);
+  }
+
+  // Update user info
+  userUpdate(user: any){
+    // Save to session storage
+    this.saveSession(user);
+    // Save to server
+    this.httpClient.post<Userobj[]>(BACKEND_URL + '/auth/update', user,  httpOptions)
+      .subscribe((m: any) => {alert(JSON.stringify(m));});
   }
 
   // Clear session to Logout

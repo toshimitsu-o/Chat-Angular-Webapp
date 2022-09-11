@@ -20,7 +20,7 @@ export class ProfileComponent implements OnInit {
 
   save() {
     // Save to session storage
-    this.authService.saveSession(this.user);
+    this.authService.userUpdate(this.user);
   }
 
 }
