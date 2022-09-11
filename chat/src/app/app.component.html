@@ -1,8 +1,8 @@
-<main class="d-flex flex-nowrap">
+<main class="d-flex">
   <ng-container *ngIf="showSidenav">
-<app-sidenav class="d-flex flex-column flex-shrink-0 bg-light" style="width: 4.5rem; height: 100vh;"></app-sidenav>
-</ng-container>
-<div class="container">
-  <router-outlet></router-outlet>
-</div>
+    <app-sidenav class="d-flex flex-column flex-shrink-0 bg-light" style="width: 4.5rem; height: 100vh;"></app-sidenav>
+  </ng-container>
+  <div class="container mw-100" style="height: 100vh;">
+    <router-outlet></router-outlet>
+  </div>
 </main>

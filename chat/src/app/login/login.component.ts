@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
       if (data.valid) { // if received valid in data is true
         this.authService.saveSession(data); // save data to session
         // Relocate
-        this.router.navigate(['/account']);
+        this.router.navigate(['/chat']);
       } else {
         alert("Login failed.");
       }

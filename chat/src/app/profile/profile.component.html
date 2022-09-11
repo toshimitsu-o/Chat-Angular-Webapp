@@ -1,18 +1,38 @@
-<h1>Profile</h1>
-<form>
-    <!-- Username input -->
-    <div class="form-outline mb-4">
-      <label class="form-label">Username</label>
-      <input type="username" class="form-control" [(ngModel)]="user.username" name="username" />
-    </div>
+<header class="d-flex flex-wrap border-bottom sticky-top">
+  <div class="d-flex align-items-center mb-3 mb-md-0 me-md-auto p-2">
+    <span class="fs-4">Profile</span>
+  </div>
 
-    <!-- Email input -->
-    <div class="form-outline mb-4">
-      <label class="form-label">Email address</label>
-      <input type="email" class="form-control" [(ngModel)]="user.email" name="email" />
+  <ul class="nav nav-pills p-2">
+    <li class="nav-item">
+    </li>
+  </ul>
+</header>
+<div class="d-flex p-2">
+
+  <div class="mb-4 p-2 text-center">
+    <div class="p-3">
+      <img src="./assets/images/user.jpg" alt="mdo" width="200" height="200" class="rounded-circle">
     </div>
-  
-    <!-- Submit button -->
-    <button type="button" class="btn btn-primary btn-block mb-4" (click)="save()">Save</button>
-  
-  </form>
+    <button type="button" class="btn btn-outline-primary btn-sm mb-4">Change Profile Image</button>
+  </div>
+  <div class="mb-4 p-4">
+    <form>
+      <div class="form-outline mb-4">
+        <label class="form-label">Username</label>
+        <input type="username" class="form-control" [(ngModel)]="user.username" name="username" />
+      </div>
+      <div class="form-outline mb-4">
+        <label class="form-label">Email address</label>
+        <input type="email" class="form-control" [(ngModel)]="user.email" name="email" />
+      </div>
+      <div class="form-outline mb-4">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" placeholder="****" name="password" />
+      </div>
+      <!-- Submit button -->
+      <button type="button" class="btn btn-primary btn-block mb-4" (click)="save()">Save</button>
+
+    </form>
+  </div>
+</div>
