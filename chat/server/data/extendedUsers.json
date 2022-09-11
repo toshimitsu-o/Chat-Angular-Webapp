@@ -1,1 +1,1 @@
-[{"username":"sadmin","email":"super@test.com","role":"superAdmin"},{"username":"gadmin","email":"group@test.com","role":"groupAdmin"},{"username":"new","email":"ne","role":"groupAssis"}]
+[{"username":"sadmin","email":"super@test.com","role":"superAdmin"},{"username":"gadmin","email":"group@test.com","role":"groupAdmin"},{"username":"new","email":"ne","role":"groupAssis"},{"username":"user1","email":"user1@test.com","role":"user"},{"username":"user2","email":"user2@test.com","role":"user"},{"username":"user3","email":"user3@test.com","role":"user"}]

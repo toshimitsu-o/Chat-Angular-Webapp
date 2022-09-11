@@ -17,11 +17,11 @@ export class AdminComponent implements OnInit {
 
   user: any;
   users: any[] = []; 
-  groups = [{id: "g1", name:"Group 1"}, {id: "g2", name:"Group 2"}, {id: "g3", name:"Group 3"}];
-  channels = [{id: "c1", name:"Channel 1", gid: "g1"}, {id: "c2", name:"Channel 2", gid: "g1"}, {id: "c3", name:"Channel 3",  gid: "g2"}];
+  groups: any[] = [];
+  channels: any[] = [];
   resultChannels: any[] = [];
-  groupMembers = [{username: "user1", gid: "g1"}, {username: "user2", gid: "g2"}, {username: "user3", gid: "g3"}];
-  channelMembers = [{username: "user1", cid: "c1"}, {username: "user2", cid: "c2"}, {username: "user3", cid: "c3"}];
+  groupMembers: any[] = [];
+  channelMembers: any[] = [];
   resultMembers: any[] = [];
   memberFilter = "";
   selectedGroup = "";
@@ -38,7 +38,87 @@ export class AdminComponent implements OnInit {
     this.user = this.authService.getSession(); // get user session data
     if (this.user.role == "superAdmin" || this.user.role == "groupAdmin") {
       this.getUsers();
+      this.getGroups("-");
+      this.getChannels("-", "-");
+      this.getGroupMember();
+      this.getChannelMember();
     }
+  }
+
+  getGroups(gid: any) {
+    this.httpClient.get(BACKEND_URL + '/group/' + gid, httpOptions)
+    .subscribe((data: any) => {
+      if (data) {
+        this.groups = data;
+      } else {
+        alert("Groups data failed.");
+      }
+    });
+  }
+
+  getChannels(gid: any, cid: any) {
+    this.httpClient.get(BACKEND_URL + '/channel/' + gid + '/' + cid, httpOptions)
+    .subscribe((data: any) => {
+      if (data) {
+        this.channels = data;
+      } else {
+        alert("Channels data failed.");
+      }
+    });
+  }
+
+  getGroupMember() {
+    this.httpClient.get(BACKEND_URL + '/member/group/', httpOptions)
+    .subscribe((data: any) => {
+      if (data) {
+        this.groupMembers = data;
+      } else {
+        alert("Group member data failed.");
+      }
+    });
+  }
+
+  getChannelMember() {
+    this.httpClient.get(BACKEND_URL + '/member/channel/', httpOptions)
+    .subscribe((data: any) => {
+      if (data) {
+        this.channelMembers = data;
+      } else {
+        alert("Channel member data failed.");
+      }
+    });
+  }
+
+  saveGroups() {
+    this.httpClient.put<[]>(BACKEND_URL + '/group/', this.groups, httpOptions)
+      .subscribe((data: any) => {
+        // Save to session storage
+      this.groups = data;
+      });
+  }
+
+  saveChannels() {
+    this.httpClient.put<[]>(BACKEND_URL + '/channel/', this.channels, httpOptions)
+      .subscribe((data: any) => {
+        // Save to session storage
+      this.channels = data;
+      });
+  }
+
+  saveGroupMember() {
+    this.httpClient.put<[]>(BACKEND_URL + '/member/group/', this.groupMembers, httpOptions)
+      .subscribe((data: any) => {
+        // Save to session storage
+      this.groupMembers = data;
+      });
+  }
+
+  saveChannelMember() {
+    this.httpClient.put<[]>(BACKEND_URL + '/member/channel/', this.channelMembers, httpOptions)
+      .subscribe((data: any) => {
+        // Save to session storage
+      this.channelMembers = data;
+      });
   }
 
   createGroup(id: string, name: string): void {
@@ -46,6 +126,7 @@ export class AdminComponent implements OnInit {
       alert("ID already taken!");
     } else {
       this.groups.push({id: id, name: name});
+      this.saveGroups();
     }
   }
 
@@ -54,12 +135,14 @@ export class AdminComponent implements OnInit {
       alert("ID already taken!");
     } else {
       this.channels.push({id: id, name: name, gid: this.selectedGroup});
+      this.saveChannels();
     }
   }
 
   // Delete the group and channels under the group
   deleteGroup(id: string): void {
     this.groups = this.groups.filter(g => g.id != id);
+    this.saveGroups();
     // Delete all channels under the group
     this.channels.filter(c => c.gid == id).forEach(i => {
       this.deleteChannel(i.id);
@@ -69,6 +152,7 @@ export class AdminComponent implements OnInit {
   // Delete the channel
   deleteChannel(id: string): void {
     this.channels = this.channels.filter(c => c.id != id);
+    this.saveChannels();
   }
 
   // Open a modal to show a list of channels
@@ -207,6 +291,7 @@ export class AdminComponent implements OnInit {
         return false;
       }
     });
+    this.saveGroupMember();
     this.updateGroupsByUser(user);
     // Remove the user from chanels under the group
     this.channels.filter(c => c.gid == group).forEach(i => {
@@ -218,6 +303,7 @@ export class AdminComponent implements OnInit {
   addUserToGroup(user: string, group: string) {
     let item = {username: user, gid: group};
     this.groupMembers.push(item);
+    this.saveGroupMember();
     this.updateGroupsByUser(user);
   }
 
@@ -249,6 +335,7 @@ export class AdminComponent implements OnInit {
         return false;
       }
     });
+    this.saveChannelMember();
     this.updateChannelsByUser(user, group);
   }
 
@@ -256,6 +343,7 @@ export class AdminComponent implements OnInit {
   addUserToChannel(user: string, channel: string, group: string) {
     let item = {username: user, cid: channel};
     this.channelMembers.push(item);
+    this.saveChannelMember();
     this.updateChannelsByUser(user, group);
   }
 }
