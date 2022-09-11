@@ -6,7 +6,7 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http,{
     cors: {
         origin: "http://localhost:4200",
-        methods: ["GET", "POST"]
+        methods: ["GET", "POST", "PUT", "DELETE"]
     }
 });
 const sockets = require('./socket.js');
@@ -44,3 +44,5 @@ app.post('/auth/update', require('./router/userUpdate.js'));
 // Routes for API admin
 app.get('/admin/users/:func', require('./router/adminUsers.js'));
 app.post('/admin/users/:func', require('./router/adminUsers.js'));
+app.put('/admin/users/:func/:id', require('./router/adminUsers.js'));
+app.delete('/admin/users/:func/:id/:by', require('./router/adminUsers.js'));

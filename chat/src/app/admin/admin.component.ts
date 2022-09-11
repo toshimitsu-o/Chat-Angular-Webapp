@@ -134,10 +134,29 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  // Update user's role
+  updateUserRole(user: string, role: string):void {
+    const target = this.users.find(u => u.username == user);
+    if (target) {
+      target.role = role;
+      this.httpClient.put<Userobj[]>(BACKEND_URL + '/admin/users/update/' + target.username, target,  httpOptions)
+      .subscribe((data: any) => {
+        this.users = data;
+      });
+    }
+  }
+
   // Delete one user
   deleteUser(user: string) {
     if (this.user.role == 'superAdmin') { // Check the user role
-      this.users = this.users.filter(u => u.username != user);
+      this.httpClient.delete(BACKEND_URL + '/admin/users/delete/' + user, httpOptions)
+      .subscribe((data: any) => {
+        if (data) {
+          this.users = data;
+        } else {
+          alert("User deletion failed.");
+        }
+      });
     } else {
       alert("You don't have a permission for this action.");
     }
@@ -146,6 +165,14 @@ export class AdminComponent implements OnInit {
   // Delete all users except the current user
   deleteAllUsers() {
     if (this.user.role == 'superAdmin') {
+      this.httpClient.delete(BACKEND_URL + '/admin/users/delete/all/' + this.user.username, httpOptions)
+      .subscribe((data: any) => {
+        if (data) {
+          this.users = data;
+        } else {
+          alert("User deletion failed.");
+        }
+      });
       this.users = this.users.filter(u => u.username == this.user.username);
     } else {
       alert("You don't have a permission for this action.");
@@ -230,13 +257,5 @@ export class AdminComponent implements OnInit {
     let item = {username: user, cid: channel};
     this.channelMembers.push(item);
     this.updateChannelsByUser(user, group);
-  }
-
-  // Update user's role
-  updateUserRole(user: string, role: string):void {
-    const target = this.users.find(u => u.username == user);
-    if (target) {
-      target.role = role;
-    }
   }
 }
