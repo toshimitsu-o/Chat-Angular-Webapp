@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
-import { Userobj } from '../models/user';
+import { User } from '../models/user';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json'})
@@ -191,7 +191,7 @@ export class AdminComponent implements OnInit {
 
   // Get users data from server
   getUsers() {
-    this.httpClient.get(BACKEND_URL + '/admin/users/get', httpOptions)
+    this.httpClient.get(BACKEND_URL + '/admin/users', httpOptions)
     .subscribe((data: any) => {
       if (data) {
         this.users = data;
@@ -206,11 +206,11 @@ export class AdminComponent implements OnInit {
     if (this.users.find(u => u.username == username)) { // Check if already exist
       alert("Username already taken!");
     } else {
-      let newUser = {username: username, email: email, role: "user"};
-      this.httpClient.post<Userobj[]>(BACKEND_URL + '/admin/users/create', newUser, httpOptions)
+      let newUser = new User(username, email, "user", password);
+      this.httpClient.post<User>(BACKEND_URL + '/admin/users', newUser, httpOptions)
       .subscribe((data: any) => {
-        if (data) {
-          this.users = data;
+        if (data.err == null) {
+          this.getUsers();
         } else {
           alert("User creation failed.");
         }
@@ -223,7 +223,7 @@ export class AdminComponent implements OnInit {
     const target = this.users.find(u => u.username == user);
     if (target) {
       target.role = role;
-      this.httpClient.put<Userobj[]>(BACKEND_URL + '/admin/users/update/' + target.username, target,  httpOptions)
+      this.httpClient.put<User>(BACKEND_URL + '/admin/users', target,  httpOptions)
       .subscribe((data: any) => {
         this.users = data;
       });
@@ -233,7 +233,7 @@ export class AdminComponent implements OnInit {
   // Delete one user
   deleteUser(user: string) {
     if (this.user.role == 'superAdmin') { // Check the user role
-      this.httpClient.delete(BACKEND_URL + '/admin/users/delete/' + user, httpOptions)
+      this.httpClient.delete(BACKEND_URL + '/admin/users/' + user + '/-', httpOptions)
       .subscribe((data: any) => {
         if (data) {
           this.users = data;
@@ -249,7 +249,7 @@ export class AdminComponent implements OnInit {
   // Delete all users except the current user
   deleteAllUsers() {
     if (this.user.role == 'superAdmin') {
-      this.httpClient.delete(BACKEND_URL + '/admin/users/delete/all/' + this.user.username, httpOptions)
+      this.httpClient.delete(BACKEND_URL + '/admin/users/all/' + this.user.username, httpOptions)
       .subscribe((data: any) => {
         if (data) {
           this.users = data;
@@ -257,7 +257,6 @@ export class AdminComponent implements OnInit {
           alert("User deletion failed.");
         }
       });
-      this.users = this.users.filter(u => u.username == this.user.username);
     } else {
       alert("You don't have a permission for this action.");
     }

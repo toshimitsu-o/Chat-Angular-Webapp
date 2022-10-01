@@ -28,7 +28,7 @@
       </div>
       <div class="form-outline mb-4">
         <label class="form-label">Password</label>
-        <input type="password" class="form-control" placeholder="****" name="password" />
+        <input type="password" class="form-control" [(ngModel)]="user.pwd" name="pwd" />
       </div>
       <!-- Submit button -->
       <button type="button" class="btn btn-primary btn-block mb-4" (click)="save()">Save</button>

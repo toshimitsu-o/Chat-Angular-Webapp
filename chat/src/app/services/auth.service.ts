@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json'})
 };
-import { Userobj } from '../models/user';
+import { User } from '../models/user';
 
 const BACKEND_URL = "http://localhost:3000";
 
@@ -39,7 +39,7 @@ export class AuthService {
   // Update user info
   userUpdate(user: any){
     // Save to server
-    this.httpClient.post<Userobj[]>(BACKEND_URL + '/auth/update', user,  httpOptions)
+    this.httpClient.post<User[]>(BACKEND_URL + '/auth/update', user,  httpOptions)
       .subscribe((data: any) => {
         // Save to session storage
       this.saveSession(data);

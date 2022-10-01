@@ -17,7 +17,6 @@ const PORT = 3000;
 
 // Apply express midleware
 app.use(cors());
-
 app.use(express.json()); // Mounts the specified middleware function
 
 // Point to Angular web page
@@ -35,31 +34,41 @@ console.log(__dirname);
 // Setup Socket
 sockets.connect(io, PORT);
 
-// Start server listening for requests
-server.listen(http, PORT);
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://chatty:XP2rK8i4AY0drD0L@cluster0.exw15mo.mongodb.net/?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+client.connect(err => {
+    const db = client.db("chatty");
 
-// Routes for API authentication
-app.post('/auth/login', require('./router/userLogin.js'));
-app.post('/auth/update', require('./router/userUpdate.js'));
+    // Callback function code. Start the rest of the app after connection starts
+    if (err) {return console.log(err)}
+    console.log("Connected")
 
-// Routes for API admin users
-app.get('/admin/users/:func', require('./router/adminUsers.js'));
-app.post('/admin/users/:func', require('./router/adminUsers.js'));
-app.put('/admin/users/:func/:id', require('./router/adminUsers.js'));
-app.delete('/admin/users/:func/:id/:by', require('./router/adminUsers.js'));
+    // Routes for API authentication
+    require('./router/auth.js')(db, app);
+    //app.post('/auth/login', require('./router/userLogin.js'));
+    //app.post('/auth/update', require('./router/userUpdate.js'));
 
-// Routes for API group
-app.get('/group/:gid', require('./router/getGroup.js'));
-app.put('/group/', require('./router/putGroup.js'));
+    // Routes for API admin users
+    require('./router/users.js')(db, app);
 
-// Routes for API channel
-app.get('/channel/:gid/:cid', require('./router/getChannel.js'));
-app.put('/channel/', require('./router/putChannel.js'));
+    // Routes for API group
+    app.get('/group/:gid', require('./router/getGroup.js'));
+    app.put('/group/', require('./router/putGroup.js'));
 
-// Routes for API group
-app.get('/member/group', require('./router/getGroupMember.js'));
-app.put('/member/group', require('./router/putGroupMember.js'));
+    // Routes for API channel
+    app.get('/channel/:gid/:cid', require('./router/getChannel.js'));
+    app.put('/channel/', require('./router/putChannel.js'));
 
-// Routes for API channel
-app.get('/member/channel', require('./router/getChannelMember.js'));
-app.put('/member/channel/', require('./router/putChannelMember.js'));
+    // Routes for API group
+    app.get('/member/group', require('./router/getGroupMember.js'));
+    app.put('/member/group', require('./router/putGroupMember.js'));
+
+    // Routes for API channel
+    app.get('/member/channel', require('./router/getChannelMember.js'));
+    app.put('/member/channel/', require('./router/putChannelMember.js'));
+
+    // Start server listening for requests
+    server.listen(http, PORT);
+});
+module.exports = app;
