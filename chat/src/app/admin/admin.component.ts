@@ -34,19 +34,19 @@ export class AdminComponent implements OnInit {
 
   constructor(private authService: AuthService, private modalService: NgbModal, private httpClient: HttpClient) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.user = this.authService.getSession(); // get user session data
     if (this.user.role == "superAdmin" || this.user.role == "groupAdmin") {
       this.getUsers();
-      this.getGroups("-");
-      this.getChannels("-", "-");
+      this.getGroups();
+      this.getChannels();
       this.getGroupMember();
       this.getChannelMember();
     }
   }
 
-  getGroups(gid: any) {
-    this.httpClient.get(BACKEND_URL + '/group/' + gid, httpOptions)
+  getGroups() {
+    this.httpClient.get(BACKEND_URL + '/group', httpOptions)
     .subscribe((data: any) => {
       if (data) {
         this.groups = data;
@@ -56,19 +56,19 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  getChannels(gid: any, cid: any) {
-    this.httpClient.get(BACKEND_URL + '/channel/' + gid + '/' + cid, httpOptions)
+  getChannels() {
+    this.httpClient.get(BACKEND_URL + '/channel', httpOptions)
     .subscribe((data: any) => {
       if (data) {
         this.channels = data;
       } else {
-        alert("Channels data failed.");
+        alert("Channels data retrieval failed.");
       }
     });
   }
 
   getGroupMember() {
-    this.httpClient.get(BACKEND_URL + '/member/group/', httpOptions)
+    this.httpClient.get(BACKEND_URL + '/member/group', httpOptions)
     .subscribe((data: any) => {
       if (data) {
         this.groupMembers = data;
@@ -89,44 +89,19 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  saveGroups() {
-    this.httpClient.put<[]>(BACKEND_URL + '/group/', this.groups, httpOptions)
-      .subscribe((data: any) => {
-        // Save to session storage
-      this.groups = data;
-      });
-  }
-
-  saveChannels() {
-    this.httpClient.put<[]>(BACKEND_URL + '/channel/', this.channels, httpOptions)
-      .subscribe((data: any) => {
-        // Save to session storage
-      this.channels = data;
-      });
-  }
-
-  saveGroupMember() {
-    this.httpClient.put<[]>(BACKEND_URL + '/member/group/', this.groupMembers, httpOptions)
-      .subscribe((data: any) => {
-        // Save to session storage
-      this.groupMembers = data;
-      });
-  }
-
-  saveChannelMember() {
-    this.httpClient.put<[]>(BACKEND_URL + '/member/channel/', this.channelMembers, httpOptions)
-      .subscribe((data: any) => {
-        // Save to session storage
-      this.channelMembers = data;
-      });
-  }
-
   createGroup(id: string, name: string): void {
     if (this.groups.find(g => g.id == id)) { // Check if already exist
       alert("ID already taken!");
     } else {
-      this.groups.push({id: id, name: name});
-      this.saveGroups();
+      let newGroup = {id: id, name: name};
+      this.httpClient.post<any>(BACKEND_URL + '/group', newGroup, httpOptions)
+      .subscribe((data: any) => {
+        if (data.err == null) {
+          this.getGroups();
+        } else {
+          alert("Group creation failed.");
+        }
+      });
     }
   }
 
@@ -134,25 +109,44 @@ export class AdminComponent implements OnInit {
     if (this.channels.find(g => g.id == id)) { // Check if already exist
       alert("ID already taken!");
     } else {
-      this.channels.push({id: id, name: name, gid: this.selectedGroup});
-      this.saveChannels();
+      let newChannel = {id: id, name: name, gid: this.selectedGroup};
+      this.httpClient.post<any>(BACKEND_URL + '/channel', newChannel, httpOptions)
+      .subscribe((data: any) => {
+        if (data.err == null) {
+          this.getChannels();
+        } else {
+          alert("Channel creation failed.");
+        }
+      });
     }
   }
 
   // Delete the group and channels under the group
   deleteGroup(id: string): void {
-    this.groups = this.groups.filter(g => g.id != id);
-    this.saveGroups();
-    // Delete all channels under the group
-    this.channels.filter(c => c.gid == id).forEach(i => {
-      this.deleteChannel(i.id);
+    this.httpClient.delete(BACKEND_URL + '/group/' + id, httpOptions)
+    .subscribe((data: any) => {
+      if (data) {
+        this.groups = data;
+        // Delete all channels under the group
+        this.channels.filter(c => c.gid == id).forEach(i => {
+        this.deleteChannel(i.id);
+    });
+      } else {
+        alert("User deletion failed.");
+      }
     });
   }
 
   // Delete the channel
   deleteChannel(id: string): void {
-    this.channels = this.channels.filter(c => c.id != id);
-    this.saveChannels();
+    this.httpClient.delete(BACKEND_URL + '/channel/' + id, httpOptions)
+    .subscribe((data: any) => {
+      if (data) {
+        this.channels = data;
+      } else {
+        alert("User deletion failed.");
+      }
+    });
   }
 
   // Open a modal to show a list of channels
@@ -180,10 +174,8 @@ export class AdminComponent implements OnInit {
   removeMember(user: string):void {
     if (this.memberFilter == "group") { // Check filter mode
       this.removeUserFromGroup(user, this.selectedGroup);
-      this.resultMembers = this.groupMembers.filter(m => m.gid == this.selectedGroup); // Update the member list for display
     } else if (this.memberFilter == "channel") {
       this.removeUserFromChannel(user, this.selectedChannel, this.selectedGroup);
-      this.resultMembers = this.channelMembers.filter(m => m.cid == this.selectedChannel);
     } else {
       alert("Group/Channel not specified.");
     }
@@ -281,29 +273,34 @@ export class AdminComponent implements OnInit {
 
   // Remove the user from the group
   removeUserFromGroup(user: string, group: string):void {
-    this.groupMembers = this.groupMembers.filter(u => {
-      if (u.username != user) {
-        return true;
-      } else if (u.gid != group) {
-        return true;
+    this.httpClient.delete(BACKEND_URL + '/member/group/' + user + '/' + group, httpOptions)
+    .subscribe((data: any) => {
+      if (data) {
+        this.groupMembers = data;
+        this.updateGroupsByUser(user); // Update the list view
+        // Remove the user from chanels under the group
+        this.channels.filter(c => c.gid == group).forEach(i => {
+          this.removeUserFromChannel(user, i.id, group);
+        });
+        this.resultMembers = this.groupMembers.filter(m => m.gid == this.selectedGroup); // Update the member list for display
       } else {
-        return false;
+        alert("User deletion failed.");
       }
-    });
-    this.saveGroupMember();
-    this.updateGroupsByUser(user);
-    // Remove the user from chanels under the group
-    this.channels.filter(c => c.gid == group).forEach(i => {
-      this.removeUserFromChannel(user, i.id, group);
     });
   }
 
   // Add the user to the group
   addUserToGroup(user: string, group: string) {
     let item = {username: user, gid: group};
-    this.groupMembers.push(item);
-    this.saveGroupMember();
-    this.updateGroupsByUser(user);
+    this.httpClient.post<any>(BACKEND_URL + '/member/group', item, httpOptions)
+    .subscribe((data: any) => {
+      if (data) {
+        this.groupMembers = data;
+        this.updateGroupsByUser(user); // To update list view
+      } else {
+        alert("Member addition failed.");
+      }
+    });
   }
 
    // Open a modal to show list of Channels that selected user belong to
@@ -325,24 +322,29 @@ export class AdminComponent implements OnInit {
 
   // Remove the user from the group
   removeUserFromChannel(user: string, channel: string, group: string):void {
-    this.channelMembers = this.channelMembers.filter(u => {
-      if (u.username != user) {
-        return true;
-      } else if (u.cid != channel) {
-        return true;
+    this.httpClient.delete(BACKEND_URL + '/member/channel/' + user + '/' + channel, httpOptions)
+    .subscribe((data: any) => {
+      if (data) {
+        this.channelMembers = data;
+        this.updateChannelsByUser(user, group); // Update the list view
+        this.resultMembers = this.channelMembers.filter(m => m.cid == this.selectedChannel);
       } else {
-        return false;
+        alert("User deletion failed.");
       }
     });
-    this.saveChannelMember();
-    this.updateChannelsByUser(user, group);
   }
 
   // Add the user to the group
   addUserToChannel(user: string, channel: string, group: string) {
     let item = {username: user, cid: channel};
-    this.channelMembers.push(item);
-    this.saveChannelMember();
-    this.updateChannelsByUser(user, group);
+    this.httpClient.post<any>(BACKEND_URL + '/member/channel', item, httpOptions)
+    .subscribe((data: any) => {
+      if (data) {
+        this.channelMembers = data;
+        this.updateChannelsByUser(user, group); // To update list view
+      } else {
+        alert("Member addition failed.");
+      }
+    });
   }
 }

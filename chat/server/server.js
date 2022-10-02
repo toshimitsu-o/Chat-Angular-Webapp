@@ -46,27 +46,21 @@ client.connect(err => {
 
     // Routes for API authentication
     require('./router/auth.js')(db, app);
-    //app.post('/auth/login', require('./router/userLogin.js'));
-    //app.post('/auth/update', require('./router/userUpdate.js'));
 
     // Routes for API admin users
     require('./router/users.js')(db, app);
 
     // Routes for API group
-    app.get('/group/:gid', require('./router/getGroup.js'));
-    app.put('/group/', require('./router/putGroup.js'));
+    require('./router/group.js')(db, app);
 
     // Routes for API channel
-    app.get('/channel/:gid/:cid', require('./router/getChannel.js'));
-    app.put('/channel/', require('./router/putChannel.js'));
+    require('./router/channel.js')(db, app);
 
-    // Routes for API group
-    app.get('/member/group', require('./router/getGroupMember.js'));
-    app.put('/member/group', require('./router/putGroupMember.js'));
+    // Routes for API group members
+    require('./router/groupMember.js')(db, app);
 
-    // Routes for API channel
-    app.get('/member/channel', require('./router/getChannelMember.js'));
-    app.put('/member/channel/', require('./router/putChannelMember.js'));
+    // Routes for API channel members
+    require('./router/channelMember.js')(db, app);
 
     // Start server listening for requests
     server.listen(http, PORT);

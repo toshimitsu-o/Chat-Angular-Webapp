@@ -1,7 +1,4 @@
 module.exports = function(db,app){
-    // app.post('/admin/users/:func', require('./router/adminUsers.js'));
-    // app.put('/admin/users/:func/:id', require('./router/adminUsers.js'));
-    // app.delete('/admin/users/:func/:id/:by', require('./router/adminUsers.js'));
 
     // Route to get all users data from database and return all
     app.get('/admin/users', async function(req,res){
@@ -68,7 +65,7 @@ module.exports = function(db,app){
 
     // Route to lookup user and delete it from database
     app.delete('/admin/users/:username/:by', async function(req,res){
-        if (req.params.username == "all") {
+        if (req.params.username == "all") { // Delete all user except the current user
             let byUsername = req.params.by;
             let query = {username: {$ne: byUsername}};
             const collection = await db.collection('users');
@@ -78,14 +75,14 @@ module.exports = function(db,app){
                     res.send(data);
                 });
             });
-        } else {
+        } else { // Delete one user
             let username = req.params.username;
             const collection = await db.collection('users');
             collection.find({ 'username': username }).count((err, count) => {
                 if (count == 0) { // if the user doesn't exist
                     return res.send({ err: "user does not exist" });
                 } else {
-                    // Update one item
+                    // Delete one item
                     collection.deleteOne({ 'username':username }, (err, docs) => {
                         if (err) throw err;
                         // Get a new list and return it back
