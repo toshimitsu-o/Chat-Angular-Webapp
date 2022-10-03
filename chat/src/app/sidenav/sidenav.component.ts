@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service'; // To get/save session
 import { DatabaseService } from '../services/database.service';
+import { ImguploadService } from '../services/imgupload.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -16,11 +17,13 @@ export class SidenavComponent implements OnInit {
   groupMembers: any[] = [];
   channelMembers: any[] = [];
   userGroups: any[] = [];
+  imageserver = "";
 
-  constructor(private authService: AuthService, private database: DatabaseService) { }
+  constructor(private authService: AuthService, private database: DatabaseService, private imgupload: ImguploadService) { }
 
   ngOnInit(): void {
     this.user = this.authService.getSession(); // get user session data
+    this.imageserver = this.imgupload.imageserver; // Set the image server address
     this.getGroups("-");
     this.getChannels("-", "-");
     this.getGroupMember();

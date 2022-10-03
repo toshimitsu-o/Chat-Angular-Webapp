@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import { User } from '../models/user';
+import { Group } from '../models/group';
+import { Channel } from '../models/channel';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 const httpOptions = {
@@ -38,28 +41,28 @@ export class DatabaseService {
   // POST functions
 
   postUser(item:any): any {
-    this.httpClient.post<any>(BACKEND_URL + '/admin/users', item, httpOptions)
+    this.httpClient.post<User>(BACKEND_URL + '/admin/users', item, httpOptions)
   }
 
   postGroup(item:object): any {
-    return this.httpClient.post<object>(BACKEND_URL + '/group', item, httpOptions);
+    return this.httpClient.post<Group>(BACKEND_URL + '/group', item, httpOptions);
   }
   postChannel(item:object): any {
-    return this.httpClient.post<object>(BACKEND_URL + '/channel', item, httpOptions);
+    return this.httpClient.post<Channel>(BACKEND_URL + '/channel', item, httpOptions);
   }
 
   postGroupMember(item:object): any {
-    return this.httpClient.post<object>(BACKEND_URL + '/member/group', item, httpOptions);
+    return this.httpClient.post<User>(BACKEND_URL + '/member/group', item, httpOptions);
   }
 
   postChannelMember(item:object): any {
-    return this.httpClient.post<object>(BACKEND_URL + '/member/channel', item, httpOptions);
+    return this.httpClient.post<User>(BACKEND_URL + '/member/channel', item, httpOptions);
   }
 
   // PUT functions
 
   putUser(item:object): any {
-    return this.httpClient.put<object>(BACKEND_URL + '/admin/users', item,  httpOptions)
+    return this.httpClient.put<User>(BACKEND_URL + '/admin/users', item,  httpOptions)
   }
 
   // DELETE functions

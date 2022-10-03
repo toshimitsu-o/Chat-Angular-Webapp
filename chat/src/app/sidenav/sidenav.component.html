@@ -21,7 +21,7 @@
 <div class="border-top" ngbDropdown placement="top-start" *ngIf="user">
   <a class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none" id="dropdownBasic2"
     ngbDropdownToggle>
-    <img src="./assets/images/user.jpg" alt="mdo" width="28" height="28" class="rounded-circle">
+    <img src="{{imageserver}}{{user.avatar}}" alt="mdo" width="28" height="28" class="rounded-circle">
   </a>
   <ul ngbDropdownMenu aria-labelledby="dropdownBasic2">
     <li ngbDropdownItem><a class="nav-link" routerLink="/profile">Profile</a></li>
