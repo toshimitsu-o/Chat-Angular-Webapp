@@ -35,7 +35,7 @@ module.exports = function(db,app){
         const options = { upsert: false};
         // Create a document to set
         const updateDoc = {
-            $set: { username: user.username, email:  user.email, role: user.role, pwd: user.pwd }
+            $set: { username: user.username, email:  user.email, role: user.role, pwd: user.pwd, avatar: user.avatar }
         };
 
         const collection = await db.collection('users');

@@ -12,9 +12,9 @@
 
   <div class="mb-4 p-2 text-center">
     <div class="p-3">
-      <img src="./assets/images/user.jpg" alt="mdo" width="200" height="200" class="rounded-circle">
+      <img src="{{imageserver}}{{user.avatar}}" alt="mdo" width="200" height="200" class="rounded-circle">
     </div>
-    <button type="button" class="btn btn-outline-primary btn-sm mb-4">Change Profile Image</button>
+    <button type="button" class="btn btn-outline-primary btn-sm mb-4" (click)="showModal(imgUploader)">Change Profile Image</button>
   </div>
   <div class="mb-4 p-4">
     <form>
@@ -36,3 +36,25 @@
     </form>
   </div>
 </div>
+<!-- Modal for Image Uploader -->
+<ng-template #imgUploader let-modal>
+  <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Avatar</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+      <div class="p-2">
+        <form>
+          <div class="form-outline mb-4">
+        <input type="file" class="form-control" (change)="onFileSelected($event)" name="uploadfile" id = "uploadfile" />
+      </div>
+        <button class="btn btn-primary btn-block mb-4" type="button" (click) ="onUpload()">Submit</button>
+      
+        </form>
+          
+      </div>
+  </div>
+  <!-- <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">Close</button>
+  </div> -->
+</ng-template>

@@ -2,6 +2,9 @@ const express = require('express'); // Import express.js for routing
 const app = express(); // The app object denotes the express application.
 // Cross origin recource sharing to cater for port 4200 and 3000
 const cors = require('cors');
+const path = require('path');
+var fs = require('fs');
+const formidable = require('formidable');
 const http = require('http').Server(app);
 const io = require('socket.io')(http,{
     cors: {
@@ -14,6 +17,8 @@ const server = require('./listen.js');
 
 // Degine port used for the server
 const PORT = 3000;
+
+app.use('/images',express.static(path.join(__dirname , './userimages')));
 
 // Apply express midleware
 app.use(cors());
@@ -61,6 +66,9 @@ client.connect(err => {
 
     // Routes for API channel members
     require('./router/channelMember.js')(db, app);
+
+    // Route for image upload
+    require('./router/uploads.js')(app,formidable,fs,path);
 
     // Start server listening for requests
     server.listen(http, PORT);

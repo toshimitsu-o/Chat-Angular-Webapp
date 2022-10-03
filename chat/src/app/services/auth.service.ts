@@ -39,7 +39,7 @@ export class AuthService {
   // Update user info
   userUpdate(user: any){
     // Save to server
-    this.httpClient.post<User[]>(BACKEND_URL + '/auth/update', user,  httpOptions)
+    this.httpClient.post<User>(BACKEND_URL + '/auth/update', user,  httpOptions)
       .subscribe((data: any) => {
         // Save to session storage
       this.saveSession(data);
