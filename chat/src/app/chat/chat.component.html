@@ -1,6 +1,6 @@
 <header class="d-flex flex-wrap border-bottom sticky-top">
     <div class="d-flex align-items-center mb-3 mb-md-0 me-md-auto p-2">
-        <span class="fs-4">Group 1</span>
+        <span class="fs-4">{{groupname}}</span>
     </div>
 
     <ul class="nav nav-pills p-2">
@@ -11,8 +11,8 @@
 </header>
 <div class="d-flex" style="max-height: 85%;">
     <ul ngbNav #nav="ngbNav" class="nav-pills p-3 col-3 overflow-scroll" orientation="vertical">
-        <li ngbNavItem class="p-1">
-            <a ngbNavLink>Channel 1</a>
+        <li *ngFor="let c of userChannels" ngbNavItem class="p-1">
+            <a ngbNavLink>{{c.name}}</a>
             <ng-template ngbNavContent>
                 <!-- Chat content-->
                 <ul class="list-group mb-2">
@@ -40,38 +40,6 @@
                     </div>
                 </form>
                 <!-- Chat content end -->
-            </ng-template>
-        </li>
-        <li ngbNavItem class="p-1">
-            <a ngbNavLink>Channel 2</a>
-            <ng-template ngbNavContent>
-                <!-- Groups content-->
-                <ul class="list-group mb-2">
-                    <li *ngFor="let m of messages" class="list-group-item">
-                        <div class="p-2">
-                            <img src="./assets/images/user.jpg" alt="mdo" width="28" height="28"
-                                class="rounded-circle">
-                            Username
-                        </div>
-                        <div class="card border-0">
-                            <div class="card-body p-2"> {{m}}</div>
-                        </div>
-                    </li>
-                </ul>
-                <form class="sticky-bottom">
-                    <div class="card p-2 bg-light">
-                        <div class="input-group mb-0">
-                            <input type="text" [(ngModel)]="messagecontent" name="messagecontent" id="messageconent"
-                                class="form-control border-0 bg-light" placeholder="Message">
-                            <div class="input-group-prepend">
-                                <button (click)="chat()" class="btn btn-outline-primary btn-block input-group-text"><i
-                                        class="bi bi-send"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-
-                <!-- Groups content end -->
             </ng-template>
         </li>
     </ul>

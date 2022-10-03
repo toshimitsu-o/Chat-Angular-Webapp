@@ -5,7 +5,7 @@
 <ul class="nav nav-pills nav-flush flex-column mb-auto text-center" *ngIf="user">
   <ng-container *ngIf="userGroups">
     <li *ngFor="let g of userGroups" class="nav-item">
-      <a routerLink="/chat" class="nav-link py-3 border-bottom rounded-0" aria-current="page" title={{g.name}}
+      <a routerLink="/chat/{{g.id}}" class="nav-link py-3 border-bottom rounded-0" aria-current="page" title={{g.name}}
         placement="end" ngbTooltip={{g.name}}>
         <i class="bi bi-people-fill"></i>
       </a>

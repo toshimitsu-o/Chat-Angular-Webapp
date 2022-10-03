@@ -24,17 +24,15 @@ export class SidenavComponent implements OnInit {
   ngOnInit(): void {
     this.user = this.authService.getSession(); // get user session data
     this.imageserver = this.imgupload.imageserver; // Set the image server address
-    this.getGroups("-");
-    this.getChannels("-", "-");
+    this.getGroups();
     this.getGroupMember();
-    this.getChannelMember();
   }
 
   ngDoCheck(): void {
     //this.user = this.authService.getSession(); // get user session data
   }
 
-  getGroups(gid: any) {
+  getGroups() {
     this.database.getGroups()
     .subscribe((data: any) => {
       if (data) {
@@ -46,17 +44,6 @@ export class SidenavComponent implements OnInit {
     });
   }
 
-  getChannels(gid: any, cid: any) {
-    this.database.getChannels()
-    .subscribe((data: any) => {
-      if (data) {
-        this.channels = data;
-      } else {
-        alert("Channels data failed.");
-      }
-    });
-  }
-
   getGroupMember() {
     this.database.getGroupMember()
     .subscribe((data: any) => {
@@ -64,17 +51,6 @@ export class SidenavComponent implements OnInit {
         this.groupMembers = data;
       } else {
         alert("Group member data failed.");
-      }
-    });
-  }
-
-  getChannelMember() {
-    this.database.getChannelMember()
-    .subscribe((data: any) => {
-      if (data) {
-        this.channelMembers = data;
-      } else {
-        alert("Channel member data failed.");
       }
     });
   }

@@ -11,6 +11,7 @@ const routes: Routes = [
   {path: 'account', component: AccountComponent},
   {path: 'profile', component: ProfileComponent},
   {path: 'chat', component: ChatComponent},
+  {path: 'chat/:gid', component: ChatComponent},
   {path: 'admin', component: AdminComponent}
 ];
 
