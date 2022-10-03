@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service'; // To get/save session
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json'})
-};
-const BACKEND_URL = "http://localhost:3000";
+import { DatabaseService } from '../services/database.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -21,7 +17,7 @@ export class SidenavComponent implements OnInit {
   channelMembers: any[] = [];
   userGroups: any[] = [];
 
-  constructor(private authService: AuthService, private httpClient: HttpClient) { }
+  constructor(private authService: AuthService, private database: DatabaseService) { }
 
   ngOnInit(): void {
     this.user = this.authService.getSession(); // get user session data
@@ -36,7 +32,7 @@ export class SidenavComponent implements OnInit {
   }
 
   getGroups(gid: any) {
-    this.httpClient.get(BACKEND_URL + '/group/' + gid, httpOptions)
+    this.database.getGroups()
     .subscribe((data: any) => {
       if (data) {
         this.groups = data;
@@ -48,7 +44,7 @@ export class SidenavComponent implements OnInit {
   }
 
   getChannels(gid: any, cid: any) {
-    this.httpClient.get(BACKEND_URL + '/channel/' + gid + '/' + cid, httpOptions)
+    this.database.getChannels()
     .subscribe((data: any) => {
       if (data) {
         this.channels = data;
@@ -59,7 +55,7 @@ export class SidenavComponent implements OnInit {
   }
 
   getGroupMember() {
-    this.httpClient.get(BACKEND_URL + '/member/group/', httpOptions)
+    this.database.getGroupMember()
     .subscribe((data: any) => {
       if (data) {
         this.groupMembers = data;
@@ -70,7 +66,7 @@ export class SidenavComponent implements OnInit {
   }
 
   getChannelMember() {
-    this.httpClient.get(BACKEND_URL + '/member/channel/', httpOptions)
+    this.database.getChannelMember()
     .subscribe((data: any) => {
       if (data) {
         this.channelMembers = data;

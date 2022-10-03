@@ -2,11 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { User } from '../models/user';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json'})
-};
-const BACKEND_URL = "http://localhost:3000";
+import { DatabaseService } from '../services/database.service';
 
 @Component({
   selector: 'app-admin',
@@ -32,12 +28,13 @@ export class AdminComponent implements OnInit {
   public isCollapsed = true;
   public isCollapsedC = true;
 
-  constructor(private authService: AuthService, private modalService: NgbModal, private httpClient: HttpClient) { }
+  constructor(private authService: AuthService, private modalService: NgbModal, private database: DatabaseService) { }
 
   ngOnInit() {
     this.user = this.authService.getSession(); // get user session data
     if (this.user.role == "superAdmin" || this.user.role == "groupAdmin") {
       this.getUsers();
+      //this.getGroups();
       this.getGroups();
       this.getChannels();
       this.getGroupMember();
@@ -45,19 +42,21 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  // Get goup list from database
   getGroups() {
-    this.httpClient.get(BACKEND_URL + '/group', httpOptions)
+    this.database.getGroups()
     .subscribe((data: any) => {
-      if (data) {
-        this.groups = data;
-      } else {
-        alert("Groups data failed.");
-      }
-    });
+        if (data) {
+          this.groups = data;
+        } else {
+          alert("Groups data failed.");
+        }
+      });
   }
 
+  // Get channel list from database
   getChannels() {
-    this.httpClient.get(BACKEND_URL + '/channel', httpOptions)
+    this.database.getChannels()
     .subscribe((data: any) => {
       if (data) {
         this.channels = data;
@@ -67,8 +66,9 @@ export class AdminComponent implements OnInit {
     });
   }
 
+  // Get goup member list from database
   getGroupMember() {
-    this.httpClient.get(BACKEND_URL + '/member/group', httpOptions)
+    this.database.getGroupMember()
     .subscribe((data: any) => {
       if (data) {
         this.groupMembers = data;
@@ -78,8 +78,9 @@ export class AdminComponent implements OnInit {
     });
   }
 
+  // Get channel list from database
   getChannelMember() {
-    this.httpClient.get(BACKEND_URL + '/member/channel/', httpOptions)
+    this.database.getChannelMember()
     .subscribe((data: any) => {
       if (data) {
         this.channelMembers = data;
@@ -89,12 +90,13 @@ export class AdminComponent implements OnInit {
     });
   }
 
+  // Add new group to save to database
   createGroup(id: string, name: string): void {
     if (this.groups.find(g => g.id == id)) { // Check if already exist
       alert("ID already taken!");
     } else {
-      let newGroup = {id: id, name: name};
-      this.httpClient.post<any>(BACKEND_URL + '/group', newGroup, httpOptions)
+      let item = {id: id, name: name};
+      this.database.postGroup(item)
       .subscribe((data: any) => {
         if (data.err == null) {
           this.getGroups();
@@ -105,12 +107,13 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  // Add new channle and save to database
   createChannel(id: string, name: string): void {
     if (this.channels.find(g => g.id == id)) { // Check if already exist
       alert("ID already taken!");
     } else {
-      let newChannel = {id: id, name: name, gid: this.selectedGroup};
-      this.httpClient.post<any>(BACKEND_URL + '/channel', newChannel, httpOptions)
+      let item = {id: id, name: name, gid: this.selectedGroup};
+      this.database.postChannel(item)
       .subscribe((data: any) => {
         if (data.err == null) {
           this.getChannels();
@@ -123,7 +126,7 @@ export class AdminComponent implements OnInit {
 
   // Delete the group and channels under the group
   deleteGroup(id: string): void {
-    this.httpClient.delete(BACKEND_URL + '/group/' + id, httpOptions)
+    this.database.deleteGroup(id)
     .subscribe((data: any) => {
       if (data) {
         this.groups = data;
@@ -139,7 +142,7 @@ export class AdminComponent implements OnInit {
 
   // Delete the channel
   deleteChannel(id: string): void {
-    this.httpClient.delete(BACKEND_URL + '/channel/' + id, httpOptions)
+    this.database.deleteChannel(id)
     .subscribe((data: any) => {
       if (data) {
         this.channels = data;
@@ -183,7 +186,7 @@ export class AdminComponent implements OnInit {
 
   // Get users data from server
   getUsers() {
-    this.httpClient.get(BACKEND_URL + '/admin/users', httpOptions)
+    this.database.getUsers()
     .subscribe((data: any) => {
       if (data) {
         this.users = data;
@@ -199,7 +202,7 @@ export class AdminComponent implements OnInit {
       alert("Username already taken!");
     } else {
       let newUser = new User(username, email, "user", password);
-      this.httpClient.post<User>(BACKEND_URL + '/admin/users', newUser, httpOptions)
+      this.database.postUser(newUser)
       .subscribe((data: any) => {
         if (data.err == null) {
           this.getUsers();
@@ -215,7 +218,7 @@ export class AdminComponent implements OnInit {
     const target = this.users.find(u => u.username == user);
     if (target) {
       target.role = role;
-      this.httpClient.put<User>(BACKEND_URL + '/admin/users', target,  httpOptions)
+      this.database.putUser(target)
       .subscribe((data: any) => {
         this.users = data;
       });
@@ -225,7 +228,7 @@ export class AdminComponent implements OnInit {
   // Delete one user
   deleteUser(user: string) {
     if (this.user.role == 'superAdmin') { // Check the user role
-      this.httpClient.delete(BACKEND_URL + '/admin/users/' + user + '/-', httpOptions)
+      this.database.deleteUser(user)
       .subscribe((data: any) => {
         if (data) {
           this.users = data;
@@ -241,7 +244,7 @@ export class AdminComponent implements OnInit {
   // Delete all users except the current user
   deleteAllUsers() {
     if (this.user.role == 'superAdmin') {
-      this.httpClient.delete(BACKEND_URL + '/admin/users/all/' + this.user.username, httpOptions)
+      this.database.deleteAllUsers(this.user.username)
       .subscribe((data: any) => {
         if (data) {
           this.users = data;
@@ -273,7 +276,7 @@ export class AdminComponent implements OnInit {
 
   // Remove the user from the group
   removeUserFromGroup(user: string, group: string):void {
-    this.httpClient.delete(BACKEND_URL + '/member/group/' + user + '/' + group, httpOptions)
+    this.database.deleteGroupMember(user, group)
     .subscribe((data: any) => {
       if (data) {
         this.groupMembers = data;
@@ -292,7 +295,7 @@ export class AdminComponent implements OnInit {
   // Add the user to the group
   addUserToGroup(user: string, group: string) {
     let item = {username: user, gid: group};
-    this.httpClient.post<any>(BACKEND_URL + '/member/group', item, httpOptions)
+    this.database.postGroupMember(item)
     .subscribe((data: any) => {
       if (data) {
         this.groupMembers = data;
@@ -322,7 +325,7 @@ export class AdminComponent implements OnInit {
 
   // Remove the user from the group
   removeUserFromChannel(user: string, channel: string, group: string):void {
-    this.httpClient.delete(BACKEND_URL + '/member/channel/' + user + '/' + channel, httpOptions)
+    this.database.deleteChannelMember(user, channel)
     .subscribe((data: any) => {
       if (data) {
         this.channelMembers = data;
@@ -337,7 +340,7 @@ export class AdminComponent implements OnInit {
   // Add the user to the group
   addUserToChannel(user: string, channel: string, group: string) {
     let item = {username: user, cid: channel};
-    this.httpClient.post<any>(BACKEND_URL + '/member/channel', item, httpOptions)
+    this.database.postChannelMember(item)
     .subscribe((data: any) => {
       if (data) {
         this.channelMembers = data;
