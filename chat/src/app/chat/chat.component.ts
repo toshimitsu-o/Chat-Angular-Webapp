@@ -12,27 +12,36 @@ import { AuthService } from '../services/auth.service'; // To get/save session
   providers: [SocketService]
 })
 export class ChatComponent implements OnInit {
-  messagecontent: string = "";
-  messages: string[] = [];
-  ioConnection:any;
+  
   user: any;
   gid: any;
   group: any;
   groupname = "";
   groups: any[] = [];
+  cid: any;
   channels: any[] = [];
   channelsInGroup: any[] = [];
   channelMembers: any[] = [];
   userChannels: any[] = [];
 
+  private socket: any;
+  messagecontent: string = "";
+  messages: string[] = [];
+  ioConnection:any;
+  rooms = [];
+  room = "";
+  roomnotice = "";
+  isinRoom = false;
+  activeUsers = 0;
+
   constructor(private socketservice: SocketService, private activatedRoute: ActivatedRoute, private router: Router, private database: DatabaseService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.user = this.authService.getSession(); // get user session data
+    this.initIoConnection();
     this.getGroups();
     this.getChannels();
     this.getChannelMember();
-    this.initIoConnection();
     // Subscribe to param
     this.activatedRoute.paramMap.subscribe(params => {
       this.gid = params.get("gid"); // Get Parameter from route
@@ -44,14 +53,37 @@ export class ChatComponent implements OnInit {
     });
   }
 
+  onClickChannel(channel:string) {
+    this.joinroom(channel);
+  }
+
   // Initialise connection
   private initIoConnection() {
     this.socketservice.initSocket();
-    this.ioConnection = this.socketservice.getMessage()
-    .subscribe((message: any) => {
-      // Add new message to the messages array
-      this.messages.push(message)
+    //this.socketservice.getMessage((m)=>{this.messages.push(m)});
+    // this.socketservice.getroomList(d => {
+    //   this.rooms = JSON.parse(d)
+    // });
+    this.socketservice.notice((m:any)=>{
+      this.roomnotice = m;
     });
+    this.socketservice.joined((m:any)=>{
+      this.room = m;
+      alert("joined" + m);
+    });
+    
+    this.socketservice.getMessage((m: any) => {
+      // Add new message to the messages array
+      this.messages.push(m);
+    });
+  }
+
+  joinroom(channel:string) {
+    if (this.room != "" && this.room != channel) {
+      this.socketservice.leaveRoom(this.room);
+      this.messages = [];
+    }
+    this.socketservice.joinRoom(channel);
   }
 
   // Send chat message

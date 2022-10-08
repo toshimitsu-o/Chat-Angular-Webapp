@@ -12,7 +12,7 @@
 <div class="d-flex" style="max-height: 85%;">
     <ul ngbNav #nav="ngbNav" class="nav-pills p-3 col-3 overflow-scroll" orientation="vertical">
         <li *ngFor="let c of userChannels" ngbNavItem class="p-1">
-            <a ngbNavLink>{{c.name}}</a>
+            <a ngbNavLink (click)="onClickChannel(c.id)">{{c.name}}</a>
             <ng-template ngbNavContent>
                 <!-- Chat content-->
                 <ul class="list-group mb-2">
