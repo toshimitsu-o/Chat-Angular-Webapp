@@ -24,8 +24,7 @@ module.exports = {
             // When a message comes in emit it back to all sockets with the message
             socket.on('message', async (message) => {
                 // Connect to database and save the message
-                let now = new Date();
-                message.date = now;
+                message.date = new Date();
                 const collection = await db.collection('messages');
                 collection.insertOne(message, (err,dbres) => {
                     if (err) throw err;

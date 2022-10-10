@@ -7,6 +7,7 @@ import { AuthService } from '../services/auth.service'; // To get/save session
 import { Message } from '../models/message';
 import { ImguploadService } from '../services/imgupload.service';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-chat',
@@ -27,6 +28,7 @@ export class ChatComponent implements OnInit {
   channelMembers: any[] = [];
   userChannels: any[] = [];
   imageserver:string = "";
+  pipe = new DatePipe('en-AU');
 
   messagecontent: string = "";
   messages: any[] = [];
@@ -91,6 +93,7 @@ export class ChatComponent implements OnInit {
         } else {
           console.log("Sender avatar retrival failed.")
         }
+        newMessage.date = this.pipe.transform(newMessage.date, 'd MMM y h:mm a')
         this.messages.push(newMessage);
       });
     });
@@ -175,19 +178,25 @@ export class ChatComponent implements OnInit {
 
   // Get messages from database
   getMessages(cid:string):void {
+    //let newMessages: any[] = [];
     this.database.getMessages(cid, 10)
     .subscribe((data: any) => {
       if (data) {
-          data.forEach((i:any) => {
-            this.database.getUser(i.sender).subscribe((data: any) => {
-              if (data) {
-                i.avatar= data[0].avatar;
-              } else {
-                console.log("Sender avatar retrival failed.")
-              }
-              this.messages.push(i);
-            });
+        data.forEach((i:any) => {
+          this.database.getUser(i.sender).subscribe((data: any) => {
+            if (data) {
+              i.avatar= data[0].avatar;
+            } else {
+              console.log("Sender avatar retrival failed.")
+            }
+            i.date = this.pipe.transform(i.date, 'd MMM y h:mm a')
+            this.messages.push(i);
           });
+        });
+        // newMessages.sort(function(a,b): any{
+        //   return Date.parse(a.date) - Date.parse(b.date);
+        // });
+        // this.messages = newMessages;
       } else {
         alert("Message retrieval failed.");
       }
