@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { assertPlatform, Component, OnInit } from '@angular/core';
 import { SocketService } from '../services/socket.service';
 import { ActivatedRoute } from '@angular/router'
 import { Router } from '@angular/router';
@@ -6,6 +6,7 @@ import { DatabaseService } from '../services/database.service';
 import { AuthService } from '../services/auth.service'; // To get/save session
 import { Message } from '../models/message';
 import { ImguploadService } from '../services/imgupload.service';
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-chat',
@@ -36,7 +37,10 @@ export class ChatComponent implements OnInit {
   isinRoom = false;
   activeNum = 0;
 
-  constructor(private socketservice: SocketService, private activatedRoute: ActivatedRoute, private router: Router, private database: DatabaseService, private authService: AuthService, private imgupload: ImguploadService) { }
+  selectedfile: any = null;
+  imagepath = "";
+
+  constructor(private socketservice: SocketService, private activatedRoute: ActivatedRoute, private router: Router, private database: DatabaseService, private authService: AuthService, private imgupload: ImguploadService, private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.user = this.authService.getSession(); // get user session data
@@ -133,7 +137,43 @@ export class ChatComponent implements OnInit {
     }
   }
 
-  getGroups() {
+  // Send image as chat message
+  public chatImg(file:string) {
+    if(this.room) { // Check in a room
+      let newMessage = new Message("image", file, this.user.username, this.room);
+      this.socketservice.send(newMessage);
+      this.messagecontent = "";
+    } else {
+      console.log("no message");
+    }
+  }
+
+  // Get selected file 
+  onFileSelected(event: any):void {
+    this.selectedfile = event.target.files[0];
+  }
+
+  // Upload selected image
+  onUpload():void {
+    const fd = new FormData();
+    fd.append('image', this.selectedfile, this.selectedfile.name);
+    this.imgupload.imgupload(fd).subscribe(res => {
+      let file: string = res.data.filename;
+      // Send the image as a chat message
+      this.chatImg(file);
+      // Close modal
+      this.modalService.dismissAll();
+      //this.userimage = this.imageserver + this.imagepath;
+    });
+  }
+
+  // Open a modal to upload image file
+  showImgModal(content: any):void {
+    this.modalService.open(content, { size: 'md' });
+  }
+
+  // Get all groups
+  getGroups():void {
     this.database.getGroups()
     .subscribe((data: any) => {
       if (data) {
@@ -146,7 +186,8 @@ export class ChatComponent implements OnInit {
     });
   }
 
-  getChannels() {
+  // Get all channels
+  getChannels():void {
     this.database.getChannels()
     .subscribe((data: any[]) => {
       if (data) {
@@ -158,7 +199,8 @@ export class ChatComponent implements OnInit {
     });
   }
 
-  getChannelMember() {
+  // Get all channel members
+  getChannelMember():void {
     this.database.getChannelMember()
     .subscribe((data: any) => {
       if (data) {
@@ -170,13 +212,13 @@ export class ChatComponent implements OnInit {
     });
   }
 
-    // Make a list of channels that the user belongs to
-    generateChannelByUser():void {
-      if(this.user && (this.user.role == "superAdmin" || this.user.role == "groupAdmin")) {
-        this.userChannels = this.channelsInGroup;
-      } else {
-        this.channelMembers.filter(i => i.username == this.user.username).forEach(j => this.userChannels.push(this.channelsInGroup.find(c => c.id == j.cid)));
-      }
+  // Make a list of channels that the user belongs to
+  generateChannelByUser():void {
+    if(this.user && (this.user.role == "superAdmin" || this.user.role == "groupAdmin")) {
+      this.userChannels = this.channelsInGroup;
+    } else {
+      this.channelMembers.filter(i => i.username == this.user.username).forEach(j => this.userChannels.push(this.channelsInGroup.find(c => c.id == j.cid)));
     }
+  }
 
 }

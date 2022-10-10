@@ -24,7 +24,8 @@
                             {{m.sender}}
                         </div>
                         <div class="card border-0">
-                            <div class="card-body p-2"> {{m.body}}</div>
+                            <div *ngIf="m.type == 'text'" class="card-body p-2">{{m.body}}</div>
+                            <div *ngIf="m.type == 'image'" class="card-body p-2"><a href="{{imageserver}}{{m.body}}" target="_blank"><img src="{{imageserver}}{{m.body}}" alt="File" class="rounded mx-auto d-block" width="300" height="300"></a></div>
                         </div>
                     </li>
                 </ul>
@@ -34,8 +35,8 @@
                             <input type="text" [(ngModel)]="messagecontent" name="messagecontent" id="messageconent"
                                 class="form-control border-0 bg-light" placeholder="Message">
                             <div class="input-group-prepend">
-                                <button (click)="chat()" class="btn btn-outline-primary btn-block input-group-text"><i
-                                        class="bi bi-send"></i></button>
+                                <button (click)="chat()" class="btn btn-outline-primary btn-block input-group-text"><i class="bi bi-send"></i></button>
+                                <button (click)="showImgModal(imgUploader)" class="btn btn-outline-primary btn-block input-group-text"><i class="bi bi-image"></i></button>
                             </div>
                         </div>
                     </div>
@@ -46,3 +47,25 @@
     </ul>
     <div [ngbNavOutlet]="nav" class="flex-grow-1 p-3 overflow-scroll col-9"></div>
 </div>
+<!-- Modal for Image Uploader -->
+<ng-template #imgUploader let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Send File</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div class="p-2">
+          <form>
+            <div class="form-outline mb-4">
+          <input type="file" class="form-control" (change)="onFileSelected($event)" name="uploadfile" id = "uploadfile" />
+        </div>
+          <button class="btn btn-primary btn-block mb-4" type="button" (click) ="onUpload()">Submit</button>
+        
+          </form>
+            
+        </div>
+    </div>
+    <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">Close</button>
+    </div> -->
+  </ng-template>
