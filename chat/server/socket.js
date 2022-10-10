@@ -2,8 +2,8 @@ module.exports = {
     connect: function(io, PORT){
 
         const rooms = ["c1", "c2", "c3"]; // List of rooms
-        let socketRoom = []; // List of socket.id and joined rooms
-        let socketRoomnum = [];
+        let socketRoom = []; // List of [socket.id, joined]
+        let socketRoomnum = []; // List of [room, number of users]
 
 
         // Setting a namespace
@@ -42,48 +42,62 @@ module.exports = {
 
             // Return number of users in the room
             socket.on("numusers", (room)=> {
-                var usercount = 0;
-                for (i=0; i<socketRoomnum.length; i++) {
-                    if(socketRoomnum[i][0] == room) {
-                        usercount = socketRoomnum[i][1];
-                    }
+                // var usercount = 0;
+                // for (i=0; i<socketRoomnum.length; i++) {
+                //     if(socketRoomnum[i][0] == room) {
+                //         usercount = socketRoomnum[i][1];
+                //     }
+                // }
+
+                // Emit numusers
+                const roomIn = socketRoomnum.find(i => i[0] == room);
+                if (roomIn) {
+                    // Send back the user count
+                    chat.in(room).emit("numusers", roomIn[1]);
                 }
-                // Send back the user count
-                chat.in(room).emit("numusers", usercount);
+                
             });
 
             // Join a room
             socket.on("joinRoom", async (room)=>{
                 if(rooms.includes(room)) {
                     await socket.join(room);
-                    
-                        // Check if already in a room
-                        let inroomSocketarray = false;
+                    // Check if already in a room
+                    let inroomSocketarray = false;
 
-                        for (i=0; i<socketRoom.length; i++) {
-                            // Track who is in each room
-                            if (socketRoom[i][0] == socket.id) {
-                                socketRoom[i][1] = room;
-                                inroomSocketarray = true;
+                    for (i=0; i<socketRoom.length; i++) {
+                        // Track who is in each room
+                        if (socketRoom[i][0] == socket.id) {
+                            socketRoom[i][1] = room;
+                            inroomSocketarray = true;
+                        }
+                    }
+                    if (inroomSocketarray == false) {
+                        // Add socketif/room record
+                        socketRoom.push([socket.id, room]);
+
+                        // recalculate number of users in a room
+                        let hasroomnum = false;
+                        for (let j=0; j<socketRoomnum.length; j++) {
+                            if (socketRoomnum[j][0] == room){
+                                socketRoomnum[j][1] += 1;
+                                hasroomnum = true;
                             }
                         }
-                        if (inroomSocketarray == false) {
-                            // Add socketif/room record
-                            socketRoom.push([socket.id, room]);
-                            let hasroomnum = false;
-                            // recalculate number of users in a room
-                            for (let j=0; j<socketRoomnum.length; j++) {
-                                if (socketRoomnum[j][0] == room){
-                                    socketRoomnum[j][1] += 1;
-                                    hasroomnum = true;
-                                }
-                            }
-                            // Start tracking numbers of users in a room if it hasn't been done already
-                            if (hasroomnum == false) {
-                                socketRoomnum.push([room, 1]);
-                            }
-                        }
-                        chat.in(room).emit("notice", "A new user has joined");
+                        // Start tracking numbers of users in a room if it hasn't been done already
+                        if (hasroomnum == false) {
+                        socketRoomnum.push([room, 1]);
+                    }
+                    }
+
+                    // Send notice
+                    chat.in(room).emit("notice", "A new user has joined");
+                    // Emit numusers
+                    const roomIn = socketRoomnum.find(i => i[0] == room);
+                    if (roomIn) {
+                        // Send back the user count
+                        chat.in(room).emit("numusers", roomIn[1]);
+                    }
                     return chat.in(room).emit("joined", room);
                 }
             });
@@ -106,6 +120,12 @@ module.exports = {
                             socketRoomnum.splice(j,1);
                         }
                     }
+                }
+                // Emit numusers
+                const roomIn = socketRoomnum.find(i => i[0] == room);
+                if (roomIn) {
+                    // Send back the user count
+                    chat.in(room).emit("numusers", roomIn[1]);
                 }
             });
 

@@ -32,7 +32,7 @@ export class ChatComponent implements OnInit {
   room = "";
   roomnotice = "";
   isinRoom = false;
-  activeUsers = 0;
+  activeNum = 0;
 
   constructor(private socketservice: SocketService, private activatedRoute: ActivatedRoute, private router: Router, private database: DatabaseService, private authService: AuthService) { }
 
@@ -64,26 +64,52 @@ export class ChatComponent implements OnInit {
     // this.socketservice.getroomList(d => {
     //   this.rooms = JSON.parse(d)
     // });
-    this.socketservice.notice((m:any)=>{
-      this.roomnotice = m;
+    // Get room list
+    this.socketservice.reqroomList();
+    this.socketservice.getroomList((m: any) => {
+      this.rooms = JSON.parse(m);
     });
+    // Recieve joined status
     this.socketservice.joined((m:any)=>{
       this.room = m;
-      alert("joined" + m);
+      //alert("joined" + m);
     });
-    
+    // Get messages
     this.socketservice.getMessage((m: any) => {
       // Add new message to the messages array
       this.messages.push(m);
     });
+    // Get notice
+    this.socketservice.notice((m:any)=>{
+      this.roomnotice = m;
+    });
   }
 
-  joinroom(channel:string) {
+  // Join the room
+  joinroom(channel:string):void {
+    // Leave room before joining another
     if (this.room != "" && this.room != channel) {
-      this.socketservice.leaveRoom(this.room);
-      this.messages = [];
+      this.leaveRoom();
     }
     this.socketservice.joinRoom(channel);
+    // Get number of users in the room
+    this.socketservice.reqnumusers(this.room);
+    this.socketservice.getnumusers((m: any) => {
+      this.activeNum = m;
+    });
+  }
+
+  // Leave the room
+  leaveRoom():void {
+    if (this.room != "") { // If currently in a room
+      this.socketservice.leaveRoom(this.room);
+      this.messages = [];
+      this.rooms = [];
+      this.room = "";
+      this.roomnotice = "";
+      this.isinRoom = false;
+      this.activeNum = 0;
+    }
   }
 
   // Send chat message

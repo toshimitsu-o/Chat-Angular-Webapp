@@ -1,6 +1,7 @@
 <header class="d-flex flex-wrap border-bottom sticky-top">
     <div class="d-flex align-items-center mb-3 mb-md-0 me-md-auto p-2">
         <span class="fs-4">{{groupname}}</span>
+        <p>{{rooms}}</p>
     </div>
 
     <ul class="nav nav-pills p-2">
@@ -15,6 +16,7 @@
             <a ngbNavLink (click)="onClickChannel(c.id)">{{c.name}}</a>
             <ng-template ngbNavContent>
                 <!-- Chat content-->
+                <div>Room: {{room}} Notice: {{roomnotice}} Active: {{activeNum}}</div>
                 <ul class="list-group mb-2">
                     <li *ngFor="let m of messages" class="list-group-item">
                         <div class="p-2">
