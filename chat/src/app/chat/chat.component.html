@@ -13,10 +13,10 @@
 <div class="d-flex" style="max-height: 85%;">
     <ul ngbNav #nav="ngbNav" class="nav-pills p-3 col-3 overflow-scroll" orientation="vertical">
         <li *ngFor="let c of userChannels" ngbNavItem class="p-1">
-            <a ngbNavLink (click)="onClickChannel(c.id)">{{c.name}}</a>
+            <a ngbNavLink (click)="onClickChannel(c.id)" class="position-relative">{{c.name}}<span class="badge rounded-pill text-bg-light position-absolute top-50 end-0 translate-middle-y" style ="margin-right: 10px;" *ngIf="c.id == room && activeNum > 0">{{activeNum}} users</span></a>
             <ng-template ngbNavContent>
                 <!-- Chat content-->
-                <div>Room: {{room}} Notice: {{roomnotice}} Active: {{activeNum}}</div>
+                <div class="sticky-top card p-2 bg-light"> {{roomnotice}}</div>
                 <ul class="list-group mb-2">
                     <li *ngFor="let m of messages" class="list-group-item">
                         <div class="p-2">

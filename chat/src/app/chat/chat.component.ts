@@ -62,6 +62,7 @@ export class ChatComponent implements OnInit {
 
   onClickChannel(channel:string) {
     this.joinroom(channel);
+    this.getMessages(channel);
   }
 
   // Initialise connection
@@ -170,6 +171,27 @@ export class ChatComponent implements OnInit {
   // Open a modal to upload image file
   showImgModal(content: any):void {
     this.modalService.open(content, { size: 'md' });
+  }
+
+  // Get messages from database
+  getMessages(cid:string):void {
+    this.database.getMessages(cid, 10)
+    .subscribe((data: any) => {
+      if (data) {
+          data.forEach((i:any) => {
+            this.database.getUser(i.sender).subscribe((data: any) => {
+              if (data) {
+                i.avatar= data[0].avatar;
+              } else {
+                console.log("Sender avatar retrival failed.")
+              }
+              this.messages.push(i);
+            });
+          });
+      } else {
+        alert("Message retrieval failed.");
+      }
+    });
   }
 
   // Get all groups

@@ -69,6 +69,9 @@ client.connect(err => {
     // Routes for API channel members
     require('./router/channelMember.js')(db, app);
 
+    // Routes for API messages
+    require('./router/messages.js')(db, app);
+
     // Route for image upload
     require('./router/uploads.js')(app,formidable,fs,path);
 

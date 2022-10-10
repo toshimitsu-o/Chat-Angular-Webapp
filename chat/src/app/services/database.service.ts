@@ -22,6 +22,10 @@ export class DatabaseService {
     return this.httpClient.get(BACKEND_URL + '/user/' + user, httpOptions);
   }
 
+  getMessages(cid:string, limit:number): any {
+    return this.httpClient.get(BACKEND_URL + '/messages/' + cid + '/' + limit, httpOptions);
+  }
+
   getUsers(): any {
     return this.httpClient.get(BACKEND_URL + '/admin/users', httpOptions);
   }

@@ -22,14 +22,22 @@ module.exports = {
             console.log('user connection on port ' + PORT + ' : ' + socket.id);
 
             // When a message comes in emit it back to all sockets with the message
-            socket.on('message', (message)=>{
-                for (i=0; i<socketRoom.length; i++){
-                    // Check to see if current socket id is in the room
-                    if (socketRoom[i][0] == socket.id) {
-                        // emit to the room
-                        chat.to(socketRoom[i][1]).emit('message', message);
+            socket.on('message', async (message) => {
+                // Connect to database and save the message
+                let now = new Date();
+                message.date = now;
+                const collection = await db.collection('messages');
+                collection.insertOne(message, (err,dbres) => {
+                    if (err) throw err;
+                    // Then emit it to all sockets
+                    for (i=0; i<socketRoom.length; i++){
+                        // Check to see if current socket id is in the room
+                        if (socketRoom[i][0] == socket.id) {
+                            // emit to the room
+                            chat.to(socketRoom[i][1]).emit('message', message);
+                        }
                     }
-                }
+                });
             });
 
             // By request, adding a new room
