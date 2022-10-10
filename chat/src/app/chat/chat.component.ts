@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router'
 import { Router } from '@angular/router';
 import { DatabaseService } from '../services/database.service';
 import { AuthService } from '../services/auth.service'; // To get/save session
+import { Message } from '../models/message';
+import { ImguploadService } from '../services/imgupload.service';
 
 @Component({
   selector: 'app-chat',
@@ -23,10 +25,10 @@ export class ChatComponent implements OnInit {
   channelsInGroup: any[] = [];
   channelMembers: any[] = [];
   userChannels: any[] = [];
+  imageserver:string = "";
 
-  private socket: any;
   messagecontent: string = "";
-  messages: string[] = [];
+  messages: any[] = [];
   ioConnection:any;
   rooms = [];
   room = "";
@@ -34,10 +36,11 @@ export class ChatComponent implements OnInit {
   isinRoom = false;
   activeNum = 0;
 
-  constructor(private socketservice: SocketService, private activatedRoute: ActivatedRoute, private router: Router, private database: DatabaseService, private authService: AuthService) { }
+  constructor(private socketservice: SocketService, private activatedRoute: ActivatedRoute, private router: Router, private database: DatabaseService, private authService: AuthService, private imgupload: ImguploadService) { }
 
   ngOnInit(): void {
     this.user = this.authService.getSession(); // get user session data
+    this.imageserver = this.imgupload.imageserver; // Set the image server address
     this.initIoConnection();
     this.getGroups();
     this.getChannels();
@@ -75,9 +78,16 @@ export class ChatComponent implements OnInit {
       //alert("joined" + m);
     });
     // Get messages
-    this.socketservice.getMessage((m: any) => {
-      // Add new message to the messages array
-      this.messages.push(m);
+    this.socketservice.getMessage((m: Message) => {
+      let newMessage: any = m;
+      this.database.getUser(m.sender).subscribe((data: any) => {
+        if (data) {
+          newMessage.avatar= data[0].avatar;
+        } else {
+          console.log("Sender avatar retrival failed.")
+        }
+        this.messages.push(newMessage);
+      });
     });
     // Get notice
     this.socketservice.notice((m:any)=>{
@@ -114,9 +124,9 @@ export class ChatComponent implements OnInit {
 
   // Send chat message
   public chat() {
-    if(this.messagecontent) {
-      // Check there is a message to send
-      this.socketservice.send(this.messagecontent);
+    if(this.messagecontent != "" && this.room) { // Check there is a message to send and in a room
+      let newMessage = new Message("text", this.messagecontent, this.user.username, this.room);
+      this.socketservice.send(newMessage);
       this.messagecontent = "";
     } else {
       console.log("no message");

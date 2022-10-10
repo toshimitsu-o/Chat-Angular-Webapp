@@ -1,5 +1,15 @@
 module.exports = function(db,app){
 
+    // Route to get one user data from database and return it
+    app.get('/user/:username', async function(req,res){
+        let username = req.params.username;
+        const collection = await db.collection('users');
+        collection.find({ 'username': username }).toArray((err,data)=>{
+            if (err) throw err;
+            res.send(data);
+        });
+    });
+
     // Route to get all users data from database and return all
     app.get('/admin/users', async function(req,res){
         const collection = await db.collection('users');

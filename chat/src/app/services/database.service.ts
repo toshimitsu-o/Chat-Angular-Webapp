@@ -18,6 +18,10 @@ export class DatabaseService {
 
   // GET functions
 
+  getUser(user:string): any {
+    return this.httpClient.get(BACKEND_URL + '/user/' + user, httpOptions);
+  }
+
   getUsers(): any {
     return this.httpClient.get(BACKEND_URL + '/admin/users', httpOptions);
   }

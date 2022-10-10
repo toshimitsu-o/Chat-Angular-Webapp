@@ -1,10 +1,18 @@
 module.exports = {
-    connect: function(io, PORT){
+    connect: async function(io, PORT, db){
 
-        const rooms = ["c1", "c2", "c3"]; // List of rooms
+        let rooms = [];
+        //const rooms = ["c1", "c2", "c3"]; // List of rooms
         let socketRoom = []; // List of [socket.id, joined]
         let socketRoomnum = []; // List of [room, number of users]
 
+        // Get channels and copy ids to rooms
+        const collection = await db.collection('channels');
+        const docs = await collection.find({}).toArray((err,data)=>{
+            data.forEach(i => {
+                rooms.push(i.id);
+            });
+        });
 
         // Setting a namespace
         const chat = io.of('/chat');

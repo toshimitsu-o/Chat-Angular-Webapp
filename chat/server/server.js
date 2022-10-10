@@ -36,8 +36,7 @@ console.log(__dirname);
 //     console.log('Server has been started at: ' + n + ':' + m);
 // });
 
-// Setup Socket
-sockets.connect(io, PORT);
+
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://chatty:XP2rK8i4AY0drD0L@cluster0.exw15mo.mongodb.net/?retryWrites=true&w=majority";
@@ -48,6 +47,9 @@ client.connect(err => {
     // Callback function code. Start the rest of the app after connection starts
     if (err) {return console.log(err)}
     console.log("Connected")
+
+    // Setup Socket
+    sockets.connect(io, PORT, db);
 
     // Routes for API authentication
     require('./router/auth.js')(db, app);

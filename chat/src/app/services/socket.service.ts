@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Message } from '../models/message';
 import io from 'socket.io-client';
 const SERVER_URL = 'http://localhost:3000/chat';
 
@@ -58,12 +59,12 @@ export class SocketService {
   }
 
   // Emit a message to the socket server
-  send(message: string){
+  send(message: Message){
     this.socket.emit('message', message);
   }
 
   // Listen for "message" events from the socket server
   getMessage(next: any){
-    this.socket.on('message', (m: any) => next(m));
+    this.socket.on('message', (m: Message) => next(m));
   }
 }

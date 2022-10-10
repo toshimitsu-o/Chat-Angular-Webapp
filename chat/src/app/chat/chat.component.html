@@ -20,12 +20,11 @@
                 <ul class="list-group mb-2">
                     <li *ngFor="let m of messages" class="list-group-item">
                         <div class="p-2">
-                            <img src="./assets/images/user.jpg" alt="mdo" width="28" height="28"
-                                class="rounded-circle">
-                            Username
+                            <img src="{{imageserver}}{{m.avatar}}" alt="mdo" width="28" height="28" class="rounded-circle">
+                            {{m.sender}}
                         </div>
                         <div class="card border-0">
-                            <div class="card-body p-2"> {{m}}</div>
+                            <div class="card-body p-2"> {{m.body}}</div>
                         </div>
                     </li>
                 </ul>
