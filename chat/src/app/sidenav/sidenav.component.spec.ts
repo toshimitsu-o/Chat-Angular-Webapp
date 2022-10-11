@@ -1,4 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AuthService } from '../services/auth.service'; // To get/save session
+import { AuthServiceMock } from '../mocks/auth.service.mock';
+import {HttpClient} from '@angular/common/http';
+import { DatabaseService } from '../services/database.service';
+import { DatabaseServiceMock } from '../mocks/database.service.mock';
+import { ImguploadService } from '../services/imgupload.service';
 
 import { SidenavComponent } from './sidenav.component';
 
@@ -8,7 +14,8 @@ describe('SidenavComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SidenavComponent ]
+      declarations: [ SidenavComponent ],
+      providers: [{provide: AuthService, useClass: AuthServiceMock}, HttpClient, ImguploadService, {provide: DatabaseService, useClass: DatabaseServiceMock}]
     })
     .compileComponents();
 
@@ -19,5 +26,8 @@ describe('SidenavComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  it('should get groups', () => {
+    expect(component.getGroupMember()).toBeTruthy();
   });
 });

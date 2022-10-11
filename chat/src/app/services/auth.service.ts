@@ -21,7 +21,7 @@ export class AuthService {
   getSession() {
     if (!sessionStorage.getItem("user")) {
       // no valid session relocate to login page
-      alert("Not logged in!");
+      //alert("Not logged in!");
       this.router.navigate(['/login']);
     } else {
       this.user = JSON.parse(sessionStorage.getItem("user") || "");

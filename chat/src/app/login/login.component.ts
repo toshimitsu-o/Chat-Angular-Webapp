@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AbstractControl, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json'})
@@ -18,9 +19,45 @@ export class LoginComponent implements OnInit {
   username:string = "";
   password:string = "";
 
-  constructor(private router: Router, private httpClient: HttpClient, private authService: AuthService) { }
+  form: FormGroup = new FormGroup({
+    username: new FormControl(''),
+    password: new FormControl(''),
+  });
+  submitted = false;
+
+  constructor(private router: Router, private httpClient: HttpClient, private authService: AuthService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
+    this.form = this.formBuilder.group(
+      {
+        username: [
+          '',
+          [
+            Validators.required
+          ]
+        ],
+        password: [
+          '',
+          [
+            Validators.required
+          ]
+        ]
+      }
+    );
+  }
+
+  get f(): { [key: string]: AbstractControl } {
+    return this.form.controls;
+  }
+
+  onSubmit(): void {
+    this.submitted = true;
+
+    if (this.form.invalid) {
+      return;
+    }
+    this.login();
+
   }
 
   // Check login details connecting auth server

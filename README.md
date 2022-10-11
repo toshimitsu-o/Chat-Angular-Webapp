@@ -234,8 +234,18 @@ Class and interface for user will be defined in this section.
 
 ### Server API Testing (Externally Facing Functions)
 
-The test utilises Mocha, Chai, and Chai-http. In a terminal CLI app, move to server directory and run the following command.
+The test utilises Mocha, Chai, and Chai-http. In a terminal CLI app, move to chat/server directory and run the following command.
 
 npm run-script test
 
 Should get results after the test script running. Please make sure to change const SERVER value to your server URI.
+
+### E2E Testing
+
+The test uses Protractor with Jasmine and Selenium Server.  Java Development Kit (JDK) needs to be installed.
+
+webdriver-manager start
+
+In a terminal CLI app, move to chat/e2e directory and run the following command.
+
+protractor conf.js

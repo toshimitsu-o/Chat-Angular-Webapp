@@ -26,9 +26,9 @@ export class ProfileComponent implements OnInit {
     this.userimage = this.imageserver + this.imagepath;
   }
 
-  save() {
+  save(user:any) {
     // Save to session storage
-    this.authService.userUpdate(this.user);
+    this.authService.userUpdate(user);
   }
 
   // Get selected file 
@@ -43,7 +43,7 @@ export class ProfileComponent implements OnInit {
     this.imgupload.imgupload(fd).subscribe(res => {
       this.user.avatar = res.data.filename;
       // Save to database and session
-      this.save();
+      this.save(this.user);
       // Close modal
       this.modalService.dismissAll();
       //this.userimage = this.imageserver + this.imagepath;

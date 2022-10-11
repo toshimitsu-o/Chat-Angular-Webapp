@@ -1,6 +1,6 @@
 import { assertPlatform, Component, OnInit } from '@angular/core';
 import { SocketService } from '../services/socket.service';
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { DatabaseService } from '../services/database.service';
 import { AuthService } from '../services/auth.service'; // To get/save session
