@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Message } from '../models/message';
 import io from 'socket.io-client';
-const SERVER_URL = 'http://localhost:3000/chat';
+const SERVER_URL = 'https://s5251464.elf.ict.griffith.edu.au:3000/chat';
 
 @Injectable({
   providedIn: 'root'

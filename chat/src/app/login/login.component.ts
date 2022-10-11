@@ -7,7 +7,7 @@ const httpOptions = {
 };
 import { AuthService } from '../services/auth.service'; // To get/save session
 
-const BACKEND_URL = "http://localhost:3000";
+const BACKEND_URL = "https://s5251464.elf.ict.griffith.edu.au:3000";
 
 @Component({
   selector: 'app-login',

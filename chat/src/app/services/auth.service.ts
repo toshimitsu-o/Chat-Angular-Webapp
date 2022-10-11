@@ -6,7 +6,7 @@ const httpOptions = {
 };
 import { User } from '../models/user';
 
-const BACKEND_URL = "http://localhost:3000";
+const BACKEND_URL = "https://s5251464.elf.ict.griffith.edu.au:3000";
 
 @Injectable({
   providedIn: 'root'

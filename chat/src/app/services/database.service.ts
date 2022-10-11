@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json'})
 };
-const BACKEND_URL = "http://localhost:3000";
+const BACKEND_URL = "https://s5251464.elf.ict.griffith.edu.au:3000";
 
 @Injectable({
   providedIn: 'root'
