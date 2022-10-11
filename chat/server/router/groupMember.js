@@ -48,6 +48,7 @@ module.exports = function(db,app){
                 collection.deleteOne({ $and: [{'username': user }, {'gid': gid }] }, (err, docs) => {
                     if (err) throw err;
                     // Get a new list and return it back
+                    console.log(docs)
                     collection.find({}).toArray((err, data) => {
                         res.send(data);
                     });

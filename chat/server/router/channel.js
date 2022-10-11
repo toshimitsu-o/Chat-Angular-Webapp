@@ -30,7 +30,7 @@ module.exports = function(db,app){
         });
     });
 
-    // Route to lookup group and update details in database
+    // Route to lookup channel and update details in database
     app.put('/channel', async function(req,res){
         if (!req.body) {
             return res.sendStatus(400)

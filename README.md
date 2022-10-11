@@ -78,39 +78,57 @@ The followings are the APIs that the program utilises to communicate between the
 
 ### Groups
 
-| **Route** | /group/:gid |
+| **Route** | /group |
 | --- | --- |
 | **Method** | GET |
 | **Parameters** | None |
 | **Return values** | Array of group: object {id: string, name: string} |
-| **Description** | Retrieves one or all group data. |
+| **Description** | Retrieves all group data. |
 
 ### Groups
 
-| **Route** | /group/:gid |
+| **Route** | /group |
 | --- | --- |
-| **Method** | PUT |
-| **Parameters** | Array of group: object {id: string, name: string} |
-| **Return values** | Array of group: object {id: string, name: string} |
-| **Description** | Update one or all group data. |
+| **Method** | POST |
+| **Parameters** | Group object {id: string, name: string} |
+| **Return values** | Number of added item. |
+| **Description** | Add a new group. |
 
 ### Channels
 
-| **Route** | /channel/:cid |
+| **Route** | /group/:id |
+| --- | --- |
+| **Method** | DELETE |
+| **Parameters** | Group id |
+| **Return values** | Array of group: object {id: string, name: string } |
+| **Description** | Delete one group. |
+
+### Channels
+
+| **Route** | /channel |
 | --- | --- |
 | **Method** | GET |
 | **Parameters** | None |
 | **Return values** | Array of channel: object {id: string, name: string, gid: string} |
-| **Description** | Retrieves one or all channel data. |
+| **Description** | Retrieves all channel data. |
 
 ### Channels
 
-| **Route** | /channel/:cid |
+| **Route** | /channel |
 | --- | --- |
-| **Method** | PUT |
-| **Parameters** | Array of channel: object {id: string, name: string, gid: string} |
-| **Return values** | Array of channel: object {id: string, name: string, gid: string } |
-| **Description** | Update one or all channel data. |
+| **Method** | POST |
+| **Parameters** | Channel object {id: string, name: string, gid: string } |
+| **Return values** | Number of item added. |
+| **Description** | Add a new channel. |
+
+### Channels
+
+| **Route** | /channel/:id |
+| --- | --- |
+| **Method** | DELETE |
+| **Parameters** | Channel id |
+| **Return values** | Array of channels: object {id: string, name: string, gid: string } |
+| **Description** | Delete one channel. |
 
 ### Group Member
 
@@ -147,6 +165,24 @@ The followings are the APIs that the program utilises to communicate between the
 | **Parameters** | Array of channel member: object {username: string, cid: string} |
 | **Return values** | Array of channel member: object {username: string, cid: string} |
 | **Description** | Update one or all channel member data. |
+
+### Uploader API
+
+| **Route** | /api/upload |
+| --- | --- |
+| **Method** | POST |
+| **Parameters** | Form Data (File) |
+| **Return values** | Result and file details. |
+| **Description** | Upload files to server and return file details such as new file name. |
+
+### Chat message API
+
+| **Route** | /messages/:cid/:limit |
+| --- | --- |
+| **Method** | GET |
+| **Parameters** | Channel id and limit of number of message |
+| **Return values** | Array of chat message object (type, body, sender, to, date) |
+| **Description** | Get chat messages from database within the cid with the limit |
 
 ## Angular Architecture
 
@@ -193,3 +229,13 @@ Classes and interfaces for group and channel will be defined in this section.
 #### User
 
 Class and interface for user will be defined in this section.
+
+## Testing
+
+### Server API Testing (Externally Facing Functions)
+
+The test utilises Mocha, Chai, and Chai-http. In a terminal CLI app, move to server directory and run the following command.
+
+npm run-script test
+
+Should get results after the test script running. Please make sure to change const SERVER value to your server URI.
