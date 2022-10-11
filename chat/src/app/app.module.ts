@@ -14,6 +14,7 @@ import { SocketService } from './services/socket.service';
 import { AdminComponent } from './admin/admin.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SidenavComponent } from './sidenav/sidenav.component';
+import { ToastComponent } from './toast/toast.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { SidenavComponent } from './sidenav/sidenav.component';
     ProfileComponent,
     ChatComponent,
     AdminComponent,
-    SidenavComponent
+    SidenavComponent,
+    ToastComponent
   ],
   imports: [
     BrowserModule,

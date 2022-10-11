@@ -17,7 +17,7 @@
                 <div class="text-end p-2">
                     <button *ngIf="user.role == 'superAdmin' || user.role == 'groupAdmin'"
                         class="btn btn-outline-primary" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed"
-                        aria-controls="collapseGroup">Create</button>
+                        aria-controls="collapseGroup"><i class="bi bi-plus-circle"></i></button>
                 </div>
                 <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed" class="p-2">
                     <div class="card">
@@ -75,7 +75,7 @@
                 <div class="text-end p-2">
                     <button *ngIf="user.role == 'superAdmin' || user.role == 'groupAdmin'"
                         class="btn btn-outline-primary" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed"
-                        aria-controls="collapseGroup">Create</button>
+                        aria-controls="collapseGroup"><i class="bi bi-plus-circle"></i></button>
                 </div>
                 <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed" class="p-2">
                     <div class="card">
@@ -150,7 +150,7 @@
     <div class="modal-body">
         <button *ngIf="user.role == 'superAdmin' || user.role == 'groupAdmin'" class="btn btn-outline-primary"
             (click)="collapseC.toggle()" [attr.aria-expanded]="!isCollapsedC"
-            aria-controls="collapseGroup">Create</button>
+            aria-controls="collapseGroup"><i class="bi bi-plus-circle"></i></button>
         <div #collapseC="ngbCollapse" [(ngbCollapse)]="isCollapsedC">
             <div class="card">
                 <div class="card-body row row-cols-lg-auto g-3 align-items-center">

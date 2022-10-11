@@ -5,26 +5,33 @@
 
     <ul class="nav nav-pills p-2">
         <li class="nav-item">
-            <button (click)="chat()" class="btn btn-primary btn-block input-group-text" title="Video"><i class="bi bi-camera-video"></i></button>
+            <button (click)="chat()" class="btn btn-primary btn-block input-group-text" title="Video"><i
+                    class="bi bi-camera-video"></i></button>
         </li>
     </ul>
 </header>
 <div class="d-flex" style="max-height: 85%;">
     <ul ngbNav #nav="ngbNav" class="nav-pills p-3 col-3 overflow-scroll" orientation="vertical">
         <li *ngFor="let c of userChannels" ngbNavItem class="p-1">
-            <a ngbNavLink (click)="onClickChannel(c.id)" class="position-relative">{{c.name}}<span class="badge rounded-pill text-bg-light position-absolute top-50 end-0 translate-middle-y" style ="margin-right: 10px;" *ngIf="c.id == room && activeNum > 0">{{activeNum}} users</span></a>
+            <a ngbNavLink (click)="onClickChannel(c.id)" class="position-relative">{{c.name}}<span
+                    class="badge rounded-pill text-bg-light position-absolute top-50 end-0 translate-middle-y"
+                    style="margin-right: 10px;" *ngIf="c.id == room && activeNum > 0">{{activeNum}} users</span></a>
             <ng-template ngbNavContent>
                 <!-- Chat content-->
-                <div class="sticky-top card p-2 bg-light"> {{roomnotice}}</div>
+                <!--<div class="sticky-top card p-2 bg-light"></div>-->
                 <ul class="list-group mb-2">
                     <li *ngFor="let m of messages" class="list-group-item">
                         <div class="p-2">
-                            <img src="{{imageserver}}{{m.avatar}}" alt="mdo" width="28" height="28" class="rounded-circle">
-                            {{m.sender}} <span class="float-end text-black-50" style="font-size: 0.8rem;">{{m.date}}</span>
+                            <img src="{{imageserver}}{{m.avatar}}" alt="mdo" width="28" height="28"
+                                class="rounded-circle">
+                            {{m.sender}} <span class="float-end text-black-50"
+                                style="font-size: 0.8rem;">{{m.date}}</span>
                         </div>
                         <div class="card border-0">
                             <div *ngIf="m.type == 'text'" class="card-body p-2">{{m.body}}</div>
-                            <div *ngIf="m.type == 'image'" class="card-body p-2"><a href="{{imageserver}}{{m.body}}" target="_blank"><img src="{{imageserver}}{{m.body}}" alt="File" class="rounded mx-auto d-block" width="300" height="300"></a></div>
+                            <div *ngIf="m.type == 'image'" class="card-body p-2"><a href="{{imageserver}}{{m.body}}"
+                                    target="_blank"><img src="{{imageserver}}{{m.body}}" alt="File"
+                                        class="rounded mx-auto d-block" width="300" height="300"></a></div>
                         </div>
                     </li>
                 </ul>
@@ -34,8 +41,11 @@
                             <input type="text" [(ngModel)]="messagecontent" name="messagecontent" id="messageconent"
                                 class="form-control border-0 bg-light" placeholder="Message">
                             <div class="input-group-prepend">
-                                <button (click)="chat()" class="btn btn-outline-primary btn-block input-group-text"><i class="bi bi-send"></i></button>
-                                <button (click)="showImgModal(imgUploader)" class="btn btn-outline-primary btn-block input-group-text"><i class="bi bi-image"></i></button>
+                                <button (click)="chat()" class="btn btn-outline-primary btn-block input-group-text"><i
+                                        class="bi bi-send"></i></button>
+                                <button (click)="showImgModal(imgUploader)"
+                                    class="btn btn-outline-primary btn-block input-group-text"><i
+                                        class="bi bi-image"></i></button>
                             </div>
                         </div>
                     </div>
@@ -54,17 +64,20 @@
     </div>
     <div class="modal-body">
         <div class="p-2">
-          <form>
-            <div class="form-outline mb-4">
-          <input type="file" class="form-control" (change)="onFileSelected($event)" name="uploadfile" id = "uploadfile" />
-        </div>
-          <button class="btn btn-primary btn-block mb-4" type="button" (click) ="onUpload()">Submit</button>
-        
-          </form>
-            
+            <form>
+                <div class="form-outline mb-4">
+                    <input type="file" class="form-control" (change)="onFileSelected($event)" name="uploadfile"
+                        id="uploadfile" />
+                </div>
+                <button class="btn btn-primary btn-block mb-4" type="button" (click)="onUpload()">Submit</button>
+
+            </form>
+
         </div>
     </div>
     <!-- <div class="modal-footer">
         <button type="button" class="btn btn-outline-dark" (click)="modal.close('Close click')">Close</button>
     </div> -->
-  </ng-template>
+</ng-template>
+<!-- Toast container component -->
+<app-toast aria-live="polite" aria-atomic="true"></app-toast>

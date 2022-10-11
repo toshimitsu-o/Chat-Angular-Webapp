@@ -8,6 +8,7 @@ import { Message } from '../models/message';
 import { ImguploadService } from '../services/imgupload.service';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { DatePipe } from '@angular/common';
+import { ToastService } from '../services/toast.service';
 
 @Component({
   selector: 'app-chat',
@@ -42,7 +43,7 @@ export class ChatComponent implements OnInit {
   selectedfile: any = null;
   imagepath = "";
 
-  constructor(private socketservice: SocketService, private activatedRoute: ActivatedRoute, private router: Router, private database: DatabaseService, private authService: AuthService, private imgupload: ImguploadService, private modalService: NgbModal) { }
+  constructor(private socketservice: SocketService, private activatedRoute: ActivatedRoute, private router: Router, private database: DatabaseService, private authService: AuthService, private imgupload: ImguploadService, private modalService: NgbModal, public toast: ToastService) { }
 
   ngOnInit(): void {
     this.user = this.authService.getSession(); // get user session data
@@ -60,6 +61,11 @@ export class ChatComponent implements OnInit {
       this.channelsInGroup = this.channels.filter(c => c.gid == this.gid);
       this.generateChannelByUser();
     });
+  }
+
+  ngOnDestroy(): void {
+    // Clear toast
+    this.toast.clear();
   }
 
   onClickChannel(channel:string) {
@@ -100,6 +106,8 @@ export class ChatComponent implements OnInit {
     // Get notice
     this.socketservice.notice((m:any)=>{
       this.roomnotice = m;
+      // Show toast
+      this.toast.show(this.roomnotice);
     });
   }
 
