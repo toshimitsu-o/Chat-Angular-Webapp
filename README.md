@@ -36,8 +36,8 @@ The followings are the APIs that the program utilises to communicate between the
 | **Route** | /auth/update |
 | --- | --- |
 | **Method** | POST |
-| **Parameters** | user: object {username: string, email: string, role: string} |
-| **Return values** | user: object {username: string, email: string, role: string} |
+| **Parameters** | user: object { username: user.username, email:  user.email, role: user.role, pwd: user.pwd, avatar: user.avatar} |
+| **Return values** | user: object { username: user.username, email:  user.email, role: user.role, pwd: user.pwd, avatar: user.avatar} |
 | **Description** | Update user details. |
 
 ### Users Admin
@@ -46,7 +46,7 @@ The followings are the APIs that the program utilises to communicate between the
 | --- | --- |
 | **Method** | GET |
 | **Parameters** | None |
-| **Return values** | Array of user: object {username: string, email: string, role: string} |
+| **Return values** | Array of user: object { username: user.username, email:  user.email, role: user.role, pwd: user.pwd, avatar: user.avatar} |
 | **Description** | Retrieves all user data for super admin and group admin users. |
 
 ### Users Admin
@@ -54,27 +54,27 @@ The followings are the APIs that the program utilises to communicate between the
 | **Route** | /admin/users |
 | --- | --- |
 | **Method** | POST |
-| **Parameters** | user: object {username: string, email: string, role: string} |
-| **Return values** | Array of user: object {username: string, email: string, role: string} |
-| **Description** | Create a new user and get user data as return. |
+| **Parameters** | user: object { username: user.username, email:  user.email, role: user.role, pwd: user.pwd, avatar: user.avatar} |
+| **Return values** | Number of item added |
+| **Description** | Create a new user. |
 
 ### Users Admin
 
-| **Route** | /admin/users/:id |
+| **Route** | /admin/users/ |
 | --- | --- |
 | **Method** | PUT |
-| **Parameters** | user: object {username: string, email: string, role: string} |
-| **Return values** | Array of user: object {username: string, email: string, role: string} |
+| **Parameters** | user: object { username: user.username, email:  user.email, role: user.role, pwd: user.pwd, avatar: user.avatar}} |
+| **Return values** | Array of user: object { username: user.username, email:  user.email, role: user.role, pwd: user.pwd, avatar: user.avatar} |
 | **Description** | Update user data |
 
 ### Users Admin
 
-| **Route** | /admin/users/:id/:by |
+| **Route** | /admin/users/:username/:by |
 | --- | --- |
 | **Method** | DELETE |
 | **Parameters** | none |
-| **Return values** | Array of user: object {username: string, email: string, role: string} |
-| **Description** | Delete one user or all users except the current user. The current username will be passed through :by. |
+| **Return values** | Array of user: object { username: user.username, email:  user.email, role: user.role, pwd: user.pwd, avatar: user.avatar}} |
+| **Description** | Delete one user or all users except the current user (super admin). The current username will be passed through :by. |
 
 ### Groups
 
