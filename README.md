@@ -269,6 +269,12 @@ npm run-script test
 
 Should get results after the test script running. Please make sure to change const SERVER value to your server URI.
 
+### Angular Unit Testing
+
+The test is implemeted with Karma and Jasmine. Rung the following command.
+
+ng test
+
 ### E2E Testing
 
 The test uses Protractor with Jasmine and Selenium Server.  Java Development Kit (JDK) needs to be installed.
