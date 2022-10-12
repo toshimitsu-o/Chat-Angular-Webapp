@@ -51,8 +51,16 @@ module.exports = {
             });
 
             // Send back the room list
-            socket.on("roomlist", (m)=> {
-                chat.emit("roomlist", JSON.stringify(rooms));
+            socket.on("roomlist", async (m)=> {
+                // Get channels and copy ids to rooms
+                const collection = await db.collection('channels');
+                const docs = await collection.find({}).toArray((err,data)=>{
+                    data.forEach(i => {
+                        rooms.push(i.id);
+                    });
+                    // Emit the room list
+                    chat.emit("roomlist", JSON.stringify(rooms));
+                 });
             });
 
             // Return number of users in the room
