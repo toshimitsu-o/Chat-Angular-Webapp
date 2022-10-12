@@ -1,4 +1,4 @@
-# Assignment 1: Chatty - Chat System
+# Assignment: Chatty - Chat System
 
 ## Git repository Organisation
 
