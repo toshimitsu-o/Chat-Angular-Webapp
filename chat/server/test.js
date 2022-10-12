@@ -6,7 +6,7 @@ let should = chai.should();
 let expect = chai.expect;
 chai.use(chaiHttp);
 
-const SERVER = "http://localhost:3000";
+const SERVER = "https://s5251464.elf.ict.griffith.edu.au:3000";
 
 let newUser = { username: "testtest30", email: "email@test.com", role: "user", pwd: "pass", avatar: "image.png" };
 let noUser = { username: "test-non-exist", email: "email@test.com", role: "user", pwd: "wrongpass", avatar: "image.png" };
