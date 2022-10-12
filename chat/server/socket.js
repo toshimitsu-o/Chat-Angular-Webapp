@@ -9,6 +9,7 @@ module.exports = {
         // Get channels and copy ids to rooms
         const collection = await db.collection('channels');
         const docs = await collection.find({}).toArray((err,data)=>{
+            rooms = ["video"]; // Reset the list
             data.forEach(i => {
                 rooms.push(i.id);
             });
@@ -55,6 +56,7 @@ module.exports = {
                 // Get channels and copy ids to rooms
                 const collection = await db.collection('channels');
                 const docs = await collection.find({}).toArray((err,data)=>{
+                    rooms = ["video"]; // Reset the list
                     data.forEach(i => {
                         rooms.push(i.id);
                     });
@@ -173,6 +175,12 @@ module.exports = {
                 console.log("Client disconnected.");
             });
 
+            // Receive peerID and emit back
+            socket.on("peerID", (message)=> {
+                chat.to("video").emit("peerID", message);
+            });
+
         });
+
     }
 }

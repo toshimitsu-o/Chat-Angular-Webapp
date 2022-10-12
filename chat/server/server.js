@@ -23,15 +23,25 @@ options = {
 };
 httpsServer = https.createServer(options, app);
 const PORT = 3000;
-
+// Socket io
 const io = require('socket.io')(httpsServer,{
     cors: {
-        origin: "https://s5251464.elf.ict.griffith.edu.au:3002",
-        methods: ["GET", "POST", "PUT", "DELETE"]
+        // origin: "https://s5251464.elf.ict.griffith.edu.au:3002",
+        // methods: ["GET", "POST", "PUT", "DELETE"]
+        origin: "*"
     }
 });
 const sockets = require('./socket.js');
 
+// Peer Server
+const { PeerServer } = require('peer');
+const peerServer = PeerServer({
+    port: 3001,
+    ssl: {
+        key: fs.readFileSync('../server.key'),
+        cert: fs.readFileSync('../server.crt')
+    }
+});
 
 app.use('/images',express.static(path.join(__dirname , './userimages')));
 

@@ -9,9 +9,15 @@ const SERVER_URL = 'https://s5251464.elf.ict.griffith.edu.au:3000/chat';
 })
 export class SocketService {
 
-  private socket: any;
+  socket: any;
 
   constructor() { }
+
+  peerID(peerID: string) {
+    this.initSocket();
+    this.joinRoom("video");
+    this.socket.emit("peerID", peerID);
+  }
 
   // Setup Connection to socket server
   initSocket(){
