@@ -10,13 +10,13 @@ There are a few branches that remained unmerged to the main branch due to incomp
 
 ## Data Structure
 
-The following diagram depicts the data structure in this program. Each is stored as a JSON file in the Node server which will be replaced by MongoDB data collections at later stage of the development. These files are read and saved via the Express server.
+The following diagram depicts the data structure in this program. Each is stored in MongoDB cluster database collections. These MongoDB collections are read and saved via API provided by the Express server.
 
 ![Class Diagram](https://github.com/toshimitsu-o/3813ICT-assignment/blob/main/Chatsystemdiagram.png "Class Diagram")
 
 ### Client side
 
-The data of the extended user from the server will be saved to the local session storage when users sign in. The session storage will be cleared when users log out.
+The data of the user from the server will be saved to the local session storage when users sign in. The session storage will be cleared when users log out.
 
 ## REST API
 
@@ -202,6 +202,7 @@ This is to display and provide the chat messaging functionalities. Vertical tab 
 
 This is the first view that users will interact to login to the system. The side navigation will be hidden in this section.
 
+
 #### Profile
 
 Users can see and update their details. The image file selector will be in this section to update users' profile picture.
@@ -210,25 +211,53 @@ Users can see and update their details. The image file selector will be in this 
 
 The side navigation column will be stored in this component. After login, users will see groups that they belong to and they can access to profile page and logoff link.
 
+#### Toast
+
+The toast component contains templates for toast notification ng bootstrap UI feature.
+
+#### Video
+
+This contains video chat with screenshare functionalities and the page.
+
 ### Services
 
 #### Auth
 
 The functionalities to read and save user authentication data are stored in this section for other components to access.
 
+#### Database
+
+The functionalities to read and save data from/to the database through API calls.
+
+#### Image upload
+
+The functionalities to read files from local machine and upload to the server's image directory via API.
+
 #### Socket
 
 The connection and setup functionalities related to Socket.io are stored in this section for other components to access.
 
+#### Toast
+
+The functionalities to generate  ng bootstrap toast notifications.
+
 ### Models
+
+#### Channel
+
+Class for channel is defined in this section.
 
 #### Group
 
-Classes and interfaces for group and channel will be defined in this section.
+Class for group is defined in this section.
+
+#### Message
+
+Class for message is defined in this section.
 
 #### User
 
-Class and interface for user will be defined in this section.
+Class for user is defined in this section.
 
 ## Testing
 
