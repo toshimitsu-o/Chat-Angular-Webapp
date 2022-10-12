@@ -192,7 +192,7 @@ export class ChatComponent implements OnInit {
   // Get messages from database
   getMessages(cid:string):void {
     //let newMessages: any[] = [];
-    this.database.getMessages(cid, 10)
+    this.database.getMessages(cid, 5)
     .subscribe((data: any) => {
       if (data) {
         data.forEach((i:any) => {

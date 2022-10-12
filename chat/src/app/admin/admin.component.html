@@ -21,21 +21,29 @@
                 </div>
                 <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed" class="p-2">
                     <div class="card">
+                        <form [formGroup]="formG">
                         <div class="card-body row row-cols-lg-auto g-3 align-items-center">
                             <div class="col">
                                 New Group:
                             </div>
-                            <div class="col">
-                                <input class="form-control" placeholder="Group ID" name="id" #groupid>
+                            <div class="col form-group">
+                                <input class="form-control" placeholder="Group ID" name="id" #groupid formControlName="id" [ngClass]="{ 'is-invalid': submitted && f['id'].errors }">
+                                <div *ngIf="submitted && f['id'].errors" class="invalid-feedback">
+                                    <div *ngIf="f['id'].errors['required']">Id is required</div>
+                                </div>
                             </div>
-                            <div class="col">
-                                <input class="form-control" placeholder="Group Name" name="name" #groupname>
+                            <div class="col form-group">
+                                <input class="form-control" placeholder="Group Name" name="name" #groupname formControlName="name" [ngClass]="{ 'is-invalid': submitted && f['name'].errors }">
+                                <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+                                    <div *ngIf="f['name'].errors['required']">Name is required</div>
+                                </div>
                             </div>
-                            <div class="col">
+                            <div class="col form-group">
                                 <button type="button" class="btn btn-outline-primary"
                                     (click)="createGroup(groupid.value, groupname.value)">Create</button>
                             </div>
                         </div>
+                    </form>
                     </div>
                 </div>
                 <div class="p-2">
@@ -79,24 +87,35 @@
                 </div>
                 <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed" class="p-2">
                     <div class="card">
+                        <form [formGroup]="formU">
                         <div class="card-body row row-cols-lg-auto g-3 align-items-center">
                             <div class="col">
                                 New User:
                             </div>
-                            <div class="col">
-                                <input class="form-control" placeholder="Username" name="username" #username>
+                            <div class="col form-group">
+                                <input class="form-control" placeholder="Username" name="username" #username formControlName="username" [ngClass]="{ 'is-invalid': submittedU && fU['username'].errors }">
+                                <div *ngIf="submittedU && fU['username'].errors" class="invalid-feedback">
+                                    <div *ngIf="fU['username'].errors['required']">Username is required</div>
+                                </div>
                             </div>
-                            <div class="col">
-                                <input class="form-control" placeholder="Email" name="email" #email>
+                            <div class="col form-group">
+                                <input class="form-control" placeholder="Email" name="email" #email formControlName="email" [ngClass]="{ 'is-invalid': submittedU && fU['email'].errors }">
+                                <div *ngIf="submittedU && fU['email'].errors" class="invalid-feedback">
+                                    <div *ngIf="fU['email'].errors['required']">Email is required</div>
+                                </div>
                             </div>
-                            <div class="col">
-                                <input class="form-control" placeholder="Password" name="password" #password>
+                            <div class="col form-group">
+                                <input class="form-control" placeholder="Password" name="password" #password formControlName="password" [ngClass]="{ 'is-invalid': submittedU && fU['password'].errors }">
+                                <div *ngIf="submittedU && fU['password'].errors" class="invalid-feedback">
+                                    <div *ngIf="fU['password'].errors['required']">Password is required</div>
+                                </div>
                             </div>
-                            <div class="col">
+                            <div class="col form-group">
                                 <button type="button" class="btn btn-outline-primary"
                                     (click)="createUser(username.value, email.value, password.value)">Create</button>
                             </div>
                         </div>
+                    </form>
                     </div>
                 </div>
                 <div class="p-2">
