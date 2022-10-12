@@ -180,6 +180,11 @@ module.exports = {
                 chat.to("video").emit("peerID", message);
             });
 
+            // Receive Close and emit back
+            socket.on("peerClose", (message)=> {
+                chat.to("video").emit("peerClose", message);
+            });
+
         });
 
     }

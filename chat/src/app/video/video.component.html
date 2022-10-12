@@ -1,9 +1,30 @@
-<div>
-    <div *ngFor="let video of videos">
-        <span *ngIf="video.userId !== myPeerID; else currentUserVideoLabel">{{video.userId}}</span>
-        <ng-template #currentUserVideoLabel>
-            <span>You: {{video.userId}}</span>
-        </ng-template>
-        <video [srcObject]="video.srcObject" (loadedmetadata)="onLoadedMetadata($event)" [muted]="video.muted"></video>
+<header class="d-flex flex-wrap border-bottom sticky-top">
+    <div class="d-flex align-items-center mb-3 mb-md-0 me-md-auto p-2">
+        <span class="fs-4" id="groupTitle">Video Room</span>
+    </div>
+    <ul class="nav nav-pills">
+        <li class="nav-item p-2">
+        <button *ngIf="!isOn" class="btn btn-primary btn-sm" (click)="connect()"><i
+            class="bi bi-camera-video"></i> Connect</button>
+        <button *ngIf="isOn" class="btn btn-danger btn-sm" (click)="disconnect()">Disconnect</button>
+</li>
+<li class="nav-item p-2">
+<button *ngIf="!isOn" (click)="screenshare()" class="btn btn-outline-primary btn-block btn-sm" title="Screenshare">Screenshare</button>
+        </li>
+    </ul>
+</header>
+
+<div class="container p-2 text-center">
+    <div class="">
+        <div *ngFor="let video of videos" class="p-2">
+            <div *ngIf="video.userId !== myPeerID" class="embed-responsive" style="width: auto; max-width:700px">
+                <video [srcObject]="video.srcObject" (loadedmetadata)="onLoadedMetadata($event)" [muted]="video.muted" class="rounded-4 embed-responsive-item" style="width:100%"></video>
+                <span>{{video.userId}}</span>
+            </div>
+            <div *ngIf="video.userId == myPeerID" class="" style="width:25%">
+                <video [srcObject]="video.srcObject" (loadedmetadata)="onLoadedMetadata($event)" [muted]="video.muted" class="rounded-4" style="width:100%"></video>
+                <span>{{video.userId}} (You)</span>
+            </div>
+        </div>
     </div>
 </div>

@@ -27,7 +27,8 @@ export class VideoComponent implements OnInit {
 
   user: any;
 
-  roomnotice = "";
+  isOn: boolean = false;
+  myStream: any;
 
   constructor(private socketService: SocketService, private authService: AuthService) { 
   this.user = this.authService.getSession(); // get user session data
@@ -44,16 +45,15 @@ export class VideoComponent implements OnInit {
 
   ngOnInit(): void {
     
+    
+  }
+
+  screenshare() {
     this.socketService.peerID(this.myPeerID);
-    this.socketService.notice((m:any)=>{
-      this.roomnotice = m;
-      // Show toast
-      alert(this.roomnotice);
-    });
     // Ask browser for permissions
-    navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: true
+    navigator.mediaDevices.getDisplayMedia({
+      video: true,
+      audio: true
     })
     .catch((err) => {
       console.error('[Error] Not able to retrieve user media:', err);
@@ -61,6 +61,7 @@ export class VideoComponent implements OnInit {
     })
     .then((stream:any) => { // Add stream
       if(stream) {
+        this.myStream = stream;
         this.addMyVideo(stream);
       }
 
@@ -98,7 +99,89 @@ export class VideoComponent implements OnInit {
           });
         }, 1000);
       });
+
+      this.socketService.socket.on('peerClose', (userId: any) => {
+        // Remove the video
+        this.videos = this.videos.filter(video => video.userId !== userId);
+      });
+
     });
+  }
+
+  connect() {
+    this.socketService.peerID(this.myPeerID);
+
+    // Ask browser for permissions
+    navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: true
+    })
+    .catch((err) => {
+      console.error('[Error] Not able to retrieve user media:', err);
+      return null;
+    })
+    .then((stream:any) => { // Add stream
+      
+      if(stream) {
+        this.myStream = stream;
+        this.addMyVideo(stream);
+      }
+
+      this.myPeer.on('call', (call:any) => { // When someone calls
+        console.log('receiving call...', call);
+        call.answer(stream); // Answer
+
+        call.on('stream', (otherUserVideoStream: MediaStream) => {
+          console.log('receiving other stream', otherUserVideoStream);
+          this.addOtherUserVideo(call.metadata.userId, otherUserVideoStream);
+        });
+
+        call.on('error', (err:any) => {
+          console.error(err);
+        });
+
+      });
+
+      this.socketService.socket.on('peerID', (userId: any) => {
+        console.log('Receiving user-connected event', `Calling ${userId}`);
+
+        // Let some time for new peers to be able to answer
+        setTimeout(() => {
+          const call = this.myPeer.call(userId, stream, {
+            metadata: { userId: this.myPeerID }
+          });
+
+          call.on('stream', (otherUserVideoStream: MediaStream) => {
+            this.addOtherUserVideo(userId, otherUserVideoStream);
+          });
+
+          call.on('close', () => {
+            // Remove the video
+            this.videos = this.videos.filter(video => video.userId !== userId);
+          });
+        }, 1000);
+      });
+
+      this.socketService.socket.on('peerClose', (userId: any) => {
+        // Remove the video
+        this.videos = this.videos.filter(video => video.userId !== userId);
+      });
+
+    });
+  }
+
+  disconnect() {
+    //this.myPeer.close();
+    this.socketService.leaveRoom("video");
+    this.socketService.socket.emit("peerClose", this.myPeerID);
+    this.videos = [];
+    this.isOn = false;
+
+    // Stop Media stream
+    this.myStream.getTracks().forEach(function(track:any) {
+      track.stop();
+    });
+    
   }
 
   // Add my video object to videos array
@@ -108,6 +191,7 @@ export class VideoComponent implements OnInit {
       srcObject: stream,
       userId: this.myPeerID
     });
+    this.isOn = true;
   }
 
   // Add other users video
@@ -124,6 +208,7 @@ export class VideoComponent implements OnInit {
     }
     
   }
+  
 
   // Play video on load
   onLoadedMetadata(event: Event) {
