@@ -9,6 +9,7 @@ import { ImguploadService } from '../services/imgupload.service';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { DatePipe } from '@angular/common';
 import { ToastService } from '../services/toast.service';
+import { Peer } from 'peerjs';
 
 @Component({
   selector: 'app-chat',
@@ -43,6 +44,9 @@ export class ChatComponent implements OnInit {
   selectedfile: any = null;
   imagepath = "";
 
+  // myPeerID = "";
+  // myPeer:any;
+
   constructor(private socketservice: SocketService, private activatedRoute: ActivatedRoute, private router: Router, private database: DatabaseService, private authService: AuthService, private imgupload: ImguploadService, private modalService: NgbModal, public toast: ToastService) { }
 
   ngOnInit(): void {
@@ -61,6 +65,7 @@ export class ChatComponent implements OnInit {
       this.channelsInGroup = this.channels.filter(c => c.gid == this.gid);
       this.generateChannelByUser();
     });
+    
   }
 
   ngOnDestroy(): void {
@@ -187,7 +192,7 @@ export class ChatComponent implements OnInit {
   // Get messages from database
   getMessages(cid:string):void {
     //let newMessages: any[] = [];
-    this.database.getMessages(cid, 10)
+    this.database.getMessages(cid, 5)
     .subscribe((data: any) => {
       if (data) {
         data.forEach((i:any) => {

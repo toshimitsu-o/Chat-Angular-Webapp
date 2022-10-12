@@ -9,6 +9,7 @@ module.exports = {
         // Get channels and copy ids to rooms
         const collection = await db.collection('channels');
         const docs = await collection.find({}).toArray((err,data)=>{
+            rooms = ["video"]; // Reset the list
             data.forEach(i => {
                 rooms.push(i.id);
             });
@@ -51,8 +52,17 @@ module.exports = {
             });
 
             // Send back the room list
-            socket.on("roomlist", (m)=> {
-                chat.emit("roomlist", JSON.stringify(rooms));
+            socket.on("roomlist", async (m)=> {
+                // Get channels and copy ids to rooms
+                const collection = await db.collection('channels');
+                const docs = await collection.find({}).toArray((err,data)=>{
+                    rooms = ["video"]; // Reset the list
+                    data.forEach(i => {
+                        rooms.push(i.id);
+                    });
+                    // Emit the room list
+                    chat.emit("roomlist", JSON.stringify(rooms));
+                 });
             });
 
             // Return number of users in the room
@@ -165,6 +175,17 @@ module.exports = {
                 console.log("Client disconnected.");
             });
 
+            // Receive peerID and emit back
+            socket.on("peerID", (message)=> {
+                chat.to("video").emit("peerID", message);
+            });
+
+            // Receive Close and emit back
+            socket.on("peerClose", (message)=> {
+                chat.to("video").emit("peerClose", message);
+            });
+
         });
+
     }
 }

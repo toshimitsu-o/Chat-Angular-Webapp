@@ -1,22 +1,47 @@
 const express = require('express'); // Import express.js for routing
+const bodyParser = require('body-parser');
 const app = express(); // The app object denotes the express application.
 // Cross origin recource sharing to cater for port 4200 and 3000
+// parse requests
+// app.use(bodyParser.urlencoded({
+//     extended: true
+// }));
+// app.use(bodyParser.json());
 const cors = require('cors');
 const path = require('path');
 var fs = require('fs');
 const formidable = require('formidable');
-const http = require('http').Server(app);
-const io = require('socket.io')(http,{
+const https = require('https');
+options = {
+    //generate a SSL certificate in the elf terminal.
+    //openssl genrsa -out key.pem
+    //openssl req -new -key key.pem -out csr.pem
+    //openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem
+    //rm csr.pem
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
+};
+httpsServer = https.createServer(options, app);
+const PORT = 3000;
+// Socket io
+const io = require('socket.io')(httpsServer,{
     cors: {
-        origin: "http://localhost:4200",
-        methods: ["GET", "POST", "PUT", "DELETE"]
+        // origin: "https://s5251464.elf.ict.griffith.edu.au:3002",
+        // methods: ["GET", "POST", "PUT", "DELETE"]
+        origin: "*"
     }
 });
 const sockets = require('./socket.js');
-const server = require('./listen.js');
 
-// Degine port used for the server
-const PORT = 3000;
+// Peer Server
+const { PeerServer } = require('peer');
+const peerServer = PeerServer({
+    port: 3001,
+    ssl: {
+        key: fs.readFileSync('../server.key'),
+        cert: fs.readFileSync('../server.crt')
+    }
+});
 
 app.use('/images',express.static(path.join(__dirname , './userimages')));
 
@@ -27,16 +52,6 @@ app.use(express.json()); // Mounts the specified middleware function
 // Point to Angular web page
 app.use(express.static(__dirname + '../dist/chat/'));
 console.log(__dirname);
-
-// Start the server on port 3000.
-// app.listen(3000, () => {
-//     var d = new Date();
-//     var n = d.getHours();
-//     var m = d.getMinutes();
-//     console.log('Server has been started at: ' + n + ':' + m);
-// });
-
-
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://chatty:XP2rK8i4AY0drD0L@cluster0.exw15mo.mongodb.net/?retryWrites=true&w=majority";
@@ -75,7 +90,8 @@ client.connect(err => {
     // Route for image upload
     require('./router/uploads.js')(app,formidable,fs,path);
 
-    // Start server listening for requests
-    server.listen(http, PORT);
+});
+httpsServer.listen(PORT, () => {
+    console.log(`Starting https server at: ${PORT}`);
 });
 module.exports = app;

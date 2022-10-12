@@ -16,6 +16,7 @@ import { AdminComponent } from './admin/admin.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { ToastComponent } from './toast/toast.component';
+import { VideoComponent } from './video/video.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { ToastComponent } from './toast/toast.component';
     ChatComponent,
     AdminComponent,
     SidenavComponent,
-    ToastComponent
+    ToastComponent,
+    VideoComponent
   ],
   imports: [
     BrowserModule,

@@ -3,6 +3,7 @@ import { AuthService } from '../services/auth.service';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { User } from '../models/user';
 import { DatabaseService } from '../services/database.service';
+import { AbstractControl, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-admin',
@@ -28,7 +29,20 @@ export class AdminComponent implements OnInit {
   public isCollapsed = true;
   public isCollapsedC = true;
 
-  constructor(private authService: AuthService, private modalService: NgbModal, private database: DatabaseService) { }
+  formG: FormGroup = new FormGroup({
+    id: new FormControl(''),
+    name: new FormControl(''),
+  });
+  submitted = false;
+
+  formU: FormGroup = new FormGroup({
+    username: new FormControl(''),
+    email: new FormControl(''),
+    password: new FormControl(''),
+  });
+  submittedU = false;
+
+  constructor(private authService: AuthService, private modalService: NgbModal, private database: DatabaseService,private formBuilder: FormBuilder) { }
 
   ngOnInit() {
     this.user = this.authService.getSession(); // get user session data
@@ -40,8 +54,57 @@ export class AdminComponent implements OnInit {
       this.getGroupMember();
       this.getChannelMember();
     }
+
+    this.formG = this.formBuilder.group(
+      {
+        id: [
+          '',
+          [
+            Validators.required
+          ]
+        ],
+        name: [
+          '',
+          [
+            Validators.required
+          ]
+        ],
+      }
+    );
+
+    this.formU = this.formBuilder.group(
+      {
+        username: [
+          '',
+          [
+            Validators.required
+          ]
+        ],
+        email: [
+          '',
+          [
+            Validators.required
+          ]
+        ],
+        password: [
+          '',
+          [
+            Validators.required
+          ]
+        ],
+      }
+    );
+
   }
 
+  get f(): { [key: string]: AbstractControl } {
+    return this.formG.controls;
+  }
+
+  get fU(): { [key: string]: AbstractControl } {
+    return this.formU.controls;
+  }
+  
   // Get goup list from database
   getGroups() {
     this.database.getGroups()
@@ -92,6 +155,11 @@ export class AdminComponent implements OnInit {
 
   // Add new group to save to database
   createGroup(id: string, name: string): void {
+    this.submitted = true;
+    if (this.formG.invalid) {
+      return;
+    }
+    id = id.replace(/\s/g, '-'); // Replace white space with -
     if (this.groups.find(g => g.id == id)) { // Check if already exist
       alert("ID already taken!");
     } else {
@@ -109,6 +177,7 @@ export class AdminComponent implements OnInit {
 
   // Add new channle and save to database
   createChannel(id: string, name: string): void {
+    id = id.replace(/\s/g, '-'); // Replace white space with -
     if (this.channels.find(g => g.id == id)) { // Check if already exist
       alert("ID already taken!");
     } else {
@@ -198,6 +267,11 @@ export class AdminComponent implements OnInit {
 
   // Create a new user
   createUser(username: string, email: string, password: string): void {
+    this.submittedU = true;
+    if (this.formU.invalid) {
+      return;
+    }
+    username = username.replace(/\s/g, '-'); // Replace white space with -
     if (this.users.find(u => u.username == username)) { // Check if already exist
       alert("Username already taken!");
     } else {

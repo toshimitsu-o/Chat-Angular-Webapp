@@ -12,7 +12,7 @@ app.post('/api/upload', (req, res) => {
     //assuming a single file for this example.
     let oldpath = files.image.filepath;
     let newfilename = files.image.originalFilename;
-    newfilename = newfilename.split('.').join('-' + Date.now() + '.');
+    newfilename = (Date.now() + '-') + newfilename;
     let newpath = form.uploadDir + "/" + newfilename;
     fs.rename(oldpath, newpath, function (err) {
       //if an error occurs send message to client

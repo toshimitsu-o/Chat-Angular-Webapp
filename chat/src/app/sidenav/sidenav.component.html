@@ -11,6 +11,12 @@
       </a>
     </li>
   </ng-container>
+  <li class="nav-item">
+    <a routerLink="/video" class="nav-link py-3 border-bottom rounded-0" aria-current="page" title="Video"
+      placement="end" ngbTooltip="Video" id="videoBtn">
+      <i class="bi bi-camera-video-fill"></i>
+    </a>
+  </li>
   <li class="nav-item" *ngIf="user.role != 'user'">
     <a routerLink="/admin" class="nav-link py-3 border-bottom rounded-0" aria-current="page" title="Admin"
       placement="end" ngbTooltip="Admin" id="adminBtn">

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json'})
 };
-const BACKEND_URL = "http://localhost:3000";
+const BACKEND_URL = "https://s5251464.elf.ict.griffith.edu.au:3000";
 
 @Injectable({
   providedIn: 'root'
@@ -48,8 +48,8 @@ export class DatabaseService {
 
   // POST functions
 
-  postUser(item:any): any {
-    this.httpClient.post<User>(BACKEND_URL + '/admin/users', item, httpOptions)
+  postUser(item:object): any {
+    return this.httpClient.post<User>(BACKEND_URL + '/admin/users', item, httpOptions);
   }
 
   postGroup(item:object): any {
@@ -80,7 +80,7 @@ export class DatabaseService {
   }
 
   deleteAllUsers(id:string): any {
-    this.httpClient.delete(BACKEND_URL + '/admin/users/all/' + id, httpOptions)
+    return this.httpClient.delete(BACKEND_URL + '/admin/users/all/' + id, httpOptions);
   }
 
   deleteGroup(id:string): any {
