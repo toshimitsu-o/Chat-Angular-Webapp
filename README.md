@@ -2,8 +2,6 @@
 
 ## Git repository Organisation
 
-Github: [https://github.com/toshimitsu-o/3813ICT-assignment](https://github.com/toshimitsu-o/3813ICT-assignment)
-
 The git repository of this project contains code files and a readme file. The root branch is "main" and other branches exist for experimental features. Successful implementations will be merged to the main branch.
 
 There are a few branches that remained unmerged to the main branch due to incomplete feature development. Commits and pushes were made regularly to maintain the repository trackable in case of issues.
@@ -12,7 +10,7 @@ There are a few branches that remained unmerged to the main branch due to incomp
 
 The following diagram depicts the data structure in this program. Each is stored in MongoDB cluster database collections. These MongoDB collections are read and saved via API provided by the Express server.
 
-![Class Diagram](https://github.com/toshimitsu-o/3813ICT-assignment/blob/main/Chatsystemdiagram.png "Class Diagram")
+![Class Diagram](https://github.com/toshimitsu-o/Chat-Angular-Webapp/blob/main/Chatsystemdiagram.png "Class Diagram")
 
 ### Client side
 
