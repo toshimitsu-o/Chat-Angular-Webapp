@@ -1,10 +1,41 @@
-# Assignment: Chatty - Chat System
+# Chat Room System - Chatty
 
-## Git repository Organisation
+The chat system allows users to communicate with each other in real-time within different groups and channels. Some users will have admin permission to add users to channels and groups, whilst a super admin has access to the entire site.
 
-The git repository of this project contains code files and a readme file. The root branch is "main" and other branches exist for experimental features. Successful implementations will be merged to the main branch.
+## Tech Stack
 
-There are a few branches that remained unmerged to the main branch due to incomplete feature development. Commits and pushes were made regularly to maintain the repository trackable in case of issues.
+Node.js: Serves as the backend for the application.
+Express: A web application framework for Node.js.
+MongoDB: Used for storing user, group, and channel data, as well as chat history.
+Socket.io: Enables real-time bidirectional event-based communication.
+Angular: The frontend framework for building the user interface.
+PeerJS: Utilized for video chat functionality.
+Jasmine and Protractor: Employed for unit and end-to-end testing on the Angular side.
+Bootstrap: Used for UI.
+
+## Demonstration Video
+
+https://github.com/toshimitsu-o/Chat-Angular-Webapp/assets/89127228/13b88c6f-9212-4fdd-9478-042501992d8e
+
+## Key Features
+
+### MongoDB Integration
+- Utilise MongoDB for storing user, group, and channel data, along with chat history.
+### Real-time Chat
+- Socket will be employed to facilitate real-time chat communication within channels.
+- Users can select a group and then a specific channel to engage in chat communication.
+- Chat history will be updated in real-time as users send and receive messages.
+- Notifications will be displayed when users join or leave a channel.
+### User Authentication
+- Password user authentication.
+- In case of incorrect passwords, users will be prompted to log in again, ensuring secure access to the application.
+### Image Support
+- Users can specify a profile image (avatar), displayed alongside their username in the chat history.
+- The chat system will support sending and displaying images as chat messages.
+- Image storage on the server will be handled as files in a specified directory, with file paths stored in MongoDB.
+### Video Chat Functionality
+- PeerJS on the Angular side and implementing a Peer server on the server side.
+- Users can engage in video chat sessions within the application, enhancing the overall communication experience.
 
 ## Data Structure
 
